@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI 폴더 설정 대화</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f4f5ff;
+      --sidebar-bg: #ffffff;
+      --card-bg: #ffffff;
+      --primary: #4b6fff;
+      --primary-soft: #eef1ff;
+      --accent: #ff9f43;
+      --text-main: #1f2544;
+      --text-muted: #a1a7c5;
+      --border-soft: #e3e6ff;
+      --danger: #ff5b5b;
+      --success: #32c48d;
+      --shadow-soft: 0 14px 40px rgba(15, 29, 76, 0.08);
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f4f5ff;
+      color: var(--text-main);
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    /* 전체 캔버스 */
+    #app-root {
+      width: 1440px;
+      height: 900px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform-origin: top left;
+      overflow: hidden;
+    }
+
+    .app {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+      padding: 12px;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 230px;
+      background: var(--sidebar-bg);
+      border-radius: var(--radius-lg);
+      padding: 28px 22px 22px;
+      box-shadow: var(--shadow-soft);
+
+      position: absolute;
+      top: 24px;
+      bottom: 24px;
+      left: 24px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      background: #4b6fff;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .brand-name {
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .nav-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .nav-list {
+      list-style: none;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      color: var(--text-muted);
+      font-size: 13px;
+      cursor: pointer;
+      margin-bottom: 4px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .nav-item .nav-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      background: #f3f5ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .nav-item.active {
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .nav-item.active .nav-icon {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .logout {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-muted);
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* MAIN CONTENT : 채팅 레이아웃 */
+    .content-wrapper {
+      margin-left: 260px;
+      height: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      overflow: hidden;
+    }
+
+    .chat-layout {
+      border-radius: var(--radius-lg);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 28px 28px 22px 28px;
+      overflow: hidden; /* 전체 스크롤 막고 아래 chat-window만 스크롤 */
+    }
+
+    .chat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .chat-title {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .chat-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* ==== 작은 정보 버튼(칩) ==== */
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: #dde2ff;
+      font-size: 12px;
+      color: #323a85;
+      letter-spacing: 0.02em;
+    }
+
+    .chip-label {
+      font-weight: 600;
+      text-decoration: none; /* 언더라인 제거 */
+    }
+
+    .chip-close {
+      margin-left: 6px;
+      font-size: 14px;
+      line-height: 1;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: #111;
+    }
+
+    /* 프롬프트 추가하기 버튼 모드일 때 */
+    .chip-add {
+      background: #eef1ff;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .chat-window {
+      flex: 1;
+      margin-top: 18px;
+      margin-bottom: 16px;
+      padding-right: 10px;
+      background: transparent;
+      border-radius: 0;
+      overflow-y: auto; /* 여기만 스크롤 */
+    }
+
+    .chat-message {
+      width: 100%;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: flex-start; /* 프로필과 텍스트 상단 정렬 */
+    }
+
+    .chat-message.bot {
+      justify-content: flex-start;
+    }
+
+    .chat-message.user {
+      justify-content: flex-end;
+    }
+
+    .chat-bubble {
+      max-width: 70%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.7;
+      white-space: pre-line;
+    }
+
+    .chat-message.bot .chat-bubble {
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+      color: #353b5c;
+    }
+
+    .chat-message.user .chat-bubble {
+      background: #d5d8e8;
+      color: #22263f;
+      border-bottom-right-radius: 4px;
+    }
+
+    .bot-profile {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      background: #ddd;
+      overflow: hidden;
+      flex-shrink: 0;
+      margin-right: 10px;
+    }
+
+    .bot-profile img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ===== 입력 영역 (2줄) ===== */
+    .chat-input-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px 14px;
+      background: #ffffff;
+      border-radius: 18px;
+    }
+
+    .chat-input-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chat-input {
+      border: none;
+      outline: none;
+      flex: 1;
+      font-size: 14px;
+      color: #333;
+    }
+    .chat-input::placeholder {
+      color: #b5b8cc;
+    }
+
+    .send-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: none;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      color: #fff;
+    }
+
+    .chat-tools-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 2px;
+    }
+
+    .chat-tool-btn {
+      border: none;
+      background: transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      font-size: 12px;
+      color: #444;
+      cursor: pointer;
+    }
+
+    .chat-tool-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: #e0e0e0;
+      flex-shrink: 0;
+    }
+
+    /* ===== chat-window 전용 스크롤바 스타일 ===== */
+.chat-window {
+  flex: 1;
+  margin-top: 18px;
+  margin-bottom: 16px;
+  padding-right: 10px;
+  background: transparent;
+  border-radius: 0;
+  overflow-y: auto;
+
+  /* Firefox용 */
+  scrollbar-width: thin;
+  scrollbar-color: #b8c0ff transparent;
+}
+
+/* Webkit 계열(Chrome, Edge, Safari) */
+.chat-window::-webkit-scrollbar {
+  width: 8px;          /* 스크롤바 두께 */
+}
+
+.chat-window::-webkit-scrollbar-track {
+  background: transparent;  /* 트랙 배경 */
+}
+
+.chat-window::-webkit-scrollbar-thumb {
+  background: #d9ddff;       /* 스크롤 손잡이 색 */
+  border-radius: 999px;
+}
+
+.chat-window::-webkit-scrollbar-thumb:hover {
+  background: #d7dbff;       /* 호버 시 색 */
+}
+  </style>
+</head>
+<body>
+
+<div id="app-root">
+  <!-- 사이드바 -->
+  <aside class="sidebar">
+    <div>
+      <div class="brand">
+        <div class="brand-logo"></div>
+        <div class="brand-name">로고</div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">메뉴</div>
+        <ul class="nav-list">
+          <a href="index.html" class="nav-link">
+            <li class="nav-item">
+              <div class="nav-icon">📋</div>
+              <span>Home</span>
+            </li>
+          </a>
+
+          <li class="nav-item active">
+            <div class="nav-icon">📂</div>
+            <span>프로젝트 관리</span>
+          </li>
+
+          <li class="nav-item">
+            <div class="nav-icon">🛒</div>
+            <span>프롬프트 마켓</span>
+          </li>
+          <li class="nav-item">
+            <div class="nav-icon">💬</div>
+            <span>빠른 대화</span>
+          </li>
+          <li class="nav-item">
+            <div class="nav-icon">⚙️</div>
+            <span>개인 설정</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="nav-footer">
+      <div class="logout">
+        <span>⏻</span>
+        <span>Logout</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- 메인 : AI 대화창 -->
+  <div class="app">
+    <div class="content-wrapper">
+      <section class="chat-layout">
+        <header class="chat-header">
+          <div>
+            <div class="chat-title">사회_대화1</div>
+            <div class="chat-subtitle"></div>
+
+            <!-- 칩 영역 -->
+            <div class="chip-row" id="chipRow"></div>
+          </div>
+        </header>
+
+        <!-- 대화 영역 -->
+        <div class="chat-window" id="chatWindow">
+          <div class="chat-message bot" id="initialMessage">
+            <div class="bot-profile">
+              <img src="photo.png" alt="AI Profile" />
+            </div>
+            <div class="chat-bubble">안녕하세요! 😊  
+방금 선택하신 내용 기준으로 학습 폴더 구성을 도와드릴게요.</div>
+          </div>
+        </div>
+
+        <!-- 입력 영역 (2줄) -->
+        <form class="chat-input-bar" id="chatForm">
+          <div class="chat-input-top">
+            <input
+              id="chatInput"
+              class="chat-input"
+              placeholder="메시지를 입력해주세요."
+              autocomplete="off"
+            />
+            <button type="submit" class="send-btn">↑</button>
+          </div>
+
+          <div class="chat-tools-row">
+            <button type="button" class="chat-tool-btn">
+              <span class="chat-tool-dot"></span>
+              <span>파일 추가</span>
+            </button>
+            <button type="button" class="chat-tool-btn">
+              <span class="chat-tool-dot"></span>
+              <span>관점 설정</span>
+            </button>
+            <button type="button" class="chat-tool-btn">
+              <span class="chat-tool-dot"></span>
+              <span>실시간 글쓰기</span>
+            </button>
+            <button type="button" class="chat-tool-btn">
+              <span class="chat-tool-dot"></span>
+              <span>출처 목록</span>
+            </button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== 캔버스 스케일 =====
+  const BASE_WIDTH = 1440;
+  const BASE_HEIGHT = 900;
+
+  function updateScale() {
+    const sx = window.innerWidth / BASE_WIDTH;
+    const sy = window.innerHeight / BASE_HEIGHT;
+    const scale = Math.min(sx, sy);
+
+    const root = document.getElementById("app-root");
+    root.style.transform = `scale(${scale}) translate(-50%, -50%)`;
+  }
+
+  window.addEventListener("resize", updateScale);
+  updateScale();
+
+  // 테스트용 기본 값
+  const subject = "한국지리";
+  const purpose = "세부특기사항";
+  const prompt = "설명형 글쓰기";
+
+  const chipRow = document.getElementById("chipRow");
+
+  function addChip(label, value, closable = false) {
+    if (!value) return;
+
+    const chip = document.createElement("div");
+    chip.className = "chip";
+
+    const labelSpan = document.createElement("span");
+    labelSpan.className = "chip-label";
+    labelSpan.textContent = label;
+
+    const valueSpan = document.createElement("span");
+    valueSpan.textContent = " " + value;
+
+    chip.appendChild(labelSpan);
+    chip.appendChild(valueSpan);
+
+    if (closable) {
+      const closeBtn = document.createElement("button");
+      closeBtn.type = "button";
+      closeBtn.className = "chip-close";
+      closeBtn.textContent = "×";
+
+      closeBtn.addEventListener("click", () => {
+        // 프롬프트 칩을 "프롬프트 추가하기" 버튼으로 변경
+        labelSpan.remove();
+        closeBtn.remove();
+        chip.classList.add("chip-add");
+        valueSpan.textContent = "프롬프트 추가하기";
+        chip.addEventListener(
+          "click",
+          () => {
+            console.log("프롬프트 추가하기 클릭");
+          },
+          { once: true }
+        );
+      });
+
+      chip.appendChild(closeBtn);
+    }
+
+    chipRow.appendChild(chip);
+  }
+
+  addChip("과목", subject);
+  addChip("목적", purpose);
+  addChip("프롬프트", prompt, true);
+
+  // ===== 간단한 더미 채팅 로직 =====
+  const chatForm = document.getElementById("chatForm");
+  const chatInput = document.getElementById("chatInput");
+  const chatWindow = document.getElementById("chatWindow");
+  const initialMessage = document.getElementById("initialMessage");
+  let firstInteractionDone = false;
+
+  function appendMessage(text, role = "user") {
+    const msg = document.createElement("div");
+    msg.className = `chat-message ${role}`;
+
+    if (role === "bot") {
+      const profile = document.createElement("div");
+      profile.className = "bot-profile";
+
+      const img = document.createElement("img");
+      img.src = "photo.png";
+      img.alt = "AI Profile";
+
+      profile.appendChild(img);
+      msg.appendChild(profile);
+    }
+
+    const bubble = document.createElement("div");
+    bubble.className = "chat-bubble";
+
+    if (role === "bot") {
+      bubble.style.background = "transparent";
+      bubble.style.padding = "0";
+      bubble.style.borderRadius = "0";
+    }
+
+    bubble.textContent = text;
+    msg.appendChild(bubble);
+    chatWindow.appendChild(msg);
+
+    // 항상 맨 아래로 스크롤
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
+
+  chatForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const value = chatInput.value.trim();
+    if (!value) return;
+
+    // ✅ 첫 상호작용에서 초기 인사 메시지 제거
+    if (!firstInteractionDone && initialMessage) {
+      initialMessage.remove();
+      firstInteractionDone = true;
+    }
+
+    appendMessage(value, "user");
+    chatInput.value = "";
+
+    setTimeout(() => {
+      appendMessage(
+`[서론 핵심 메시지]
+GMO는 식량 부족 문제를 해결하는 데 매우 효과적인 기술로, 같은 면적에서 더 많은 생산량을 확보할 수 있다는 점에서 ‘식량 위기 대응의 핵심 도구’로 평가됩니다.
+
+[사용할 주요 근거 3가지]
+1) 수확량 증가 : 현상 → 원리 → 결과
+유전자 조작을 통해 병충해·가뭄 저항성을 강화하면 작물이 스트레스를 덜 받기 때문에
+동일한 환경에서도 일반 품종보다 일관된 생산량을 확보할 수 있습니다.
+→ 발표 시 표현: “같은 땅에서 더 많이, 더 안정적으로 수확할 수 있다.”
+
+2) 영양 강화 : 사례 기반 설명
+비타민 A를 강화한 ‘황금쌀(Golden Rice)’처럼 기존 작물로는 충족하기 어려운 영양소를 공급할 수 있습니다.
+이는 개발도상국의 영양 불균형 문제 해결에 실질적으로 기여합니다.
+
+3) 환경 부담 감소 : 원인·결과 구조
+병충해 저항성 GMO는 농약 사용량을 줄여 토양·수질 오염을 완화합니다.
+→ 발표 시 표현: “작물은 강해지고, 환경 부담은 줄어든다.”
+
+[추천 발표 문장]
+“GMO는 단순한 기술을 넘어, 불안정한 식량 생산 구조를 근본적으로 개선할 수 있는 실질적인 해결책입니다.
+생산량 증가, 영양 강화, 환경 부담 완화라는 세 가지 근거는 GMO가 왜 식량 문제의 대안이 될 수 있는지를 분명하게 보여줍니다.”`,
+        "bot"
+      );
+    }, 500);
+  });
+  
+</script>
+
+</body>
+</html>

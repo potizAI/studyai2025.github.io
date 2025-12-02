@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>프로젝트 관리 대시보드</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f4f5ff;
+      --sidebar-bg: #ffffff;
+      --card-bg: #ffffff;
+      --primary: #4b6fff;
+      --primary-soft: #eef1ff;
+      --accent: #ff9f43;
+      --text-main: #1f2544;
+      --text-muted: #a1a7c5;
+      --border-soft: #e3e6ff;
+      --danger: #ff5b5b;
+      --success: #32c48d;
+      --shadow-soft: 0 14px 40px rgba(15, 29, 76, 0.08);
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f4f5ff;
+      color: var(--text-main);
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    /* 전체 캔버스 */
+    #app-root {
+      width: 1440px;
+      height: 900px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform-origin: top left;
+      overflow: hidden;
+    }
+
+    .app {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+      padding: 12px;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 230px;
+      background: var(--sidebar-bg);
+      border-radius: var(--radius-lg);
+      padding: 28px 22px 22px;
+      box-shadow: var(--shadow-soft);
+
+      position: absolute;
+      top: 24px;
+      bottom: 24px;
+      left: 24px;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      background: #4b6fff;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .brand-name {
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .nav-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .nav-list {
+      list-style: none;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      color: var(--text-muted);
+      font-size: 13px;
+      cursor: pointer;
+      margin-bottom: 4px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .nav-item .nav-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      background: #f3f5ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .nav-item.active {
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .nav-item.active .nav-icon {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .logout {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-muted);
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* MAIN CONTENT */
+    .content-wrapper {
+      margin-left: 240px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+      height: 100%;
+    }
+
+    .main-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      height: 100%;
+    }
+
+    .page-header {
+      margin-bottom: 4px;
+    }
+
+    .page-title {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .tabs-bar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-top: 12px;
+      border-bottom: 1px solid #e8e8f5;
+      padding-bottom: 8px;
+    }
+
+    .project-tabs {
+      display: flex;
+      gap: 18px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 6px 0;
+      font-size: 14px;
+      cursor: pointer;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
+
+    .tab-btn .tab-badge {
+      min-width: 20px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #f2f3f8;
+      font-size: 11px;
+      color: #8f93ac;
+    }
+
+    .tab-btn.active {
+      color: #111;
+      font-weight: 600;
+    }
+
+    .tab-btn.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -9px;
+      width: 100%;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--primary);
+    }
+
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sort-btn {
+      border: none;
+      background: transparent;
+      font-size: 12px;
+      color: #444;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .sort-btn::before {
+      content: "↕";
+      font-size: 12px;
+    }
+
+    .new-folder-btn {
+      border: none;
+      background: #3763ff;
+      color: #fff;
+      font-size: 12px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .project-grid {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .project-card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 18px 20px 18px;
+      box-shadow: 0 10px 30px rgba(15, 29, 76, 0.06);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .project-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .subject-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .subject-color {
+      width: 6px;
+      height: 28px;
+      border-radius: 999px;
+    }
+
+    .subject-color.social { background: #ffd87a; }
+    .subject-color.science { background: #8ec9ff; }
+    .subject-color.english { background: #ffb9dc; }
+    .subject-color.korean { background: #c0c0ff; }
+
+    .subject-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .subject-meta {
+      font-size: 11px;
+      color: #9c9fb5;
+      margin-top: 2px;
+    }
+
+    .date-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: #fff7df;
+      color: #c7a349;
+      white-space: nowrap;
+    }
+
+    .project-body {
+      margin-top: 4px;
+    }
+
+    .project-progress-labels {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #8d90aa;
+      margin-bottom: 6px;
+    }
+
+    .project-progress-labels span.value {
+      color: #46485f;
+      font-weight: 500;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: #edf0ff;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 75%;
+      background: #3ac27a;
+      border-radius: 999px;
+    }
+
+    /* ===== 모달 ===== */
+    .subject-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .subject-modal-overlay.is-open {
+      display: flex;
+    }
+
+    .subject-modal {
+      width: 960px;
+      max-width: calc(100% - 40px);
+      height: 560px;
+      max-height: calc(100% - 40px);
+      background: #f7f7f7;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      display: flex;
+      overflow: hidden;
+      position: relative;
+      font-family: inherit;
+    }
+
+    .subject-modal-close {
+      position: absolute;
+      right: 24px;
+      top: 20px;
+      font-size: 22px;
+      cursor: pointer;
+      color: #777;
+    }
+
+    .subject-modal-left {
+      width: 260px;
+      background: #ffffff;
+      padding: 40px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 6px solid #f0f0f0;
+    }
+
+    .subject-stepper {
+      margin-top: 40px;
+    }
+
+    .subject-step {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+      color: #b7b7b7;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .subject-step-dot-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .subject-step-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #d2d2d2;
+    }
+    .subject-step-line {
+      width: 2px;
+      flex: 1;
+      background: #e0e0e0;
+      margin-top: 4px;
+    }
+    .subject-step-label {
+      line-height: 1;
+      position: relative;
+      top: -1px;
+    }
+
+    .subject-step.active {
+      color: #2563ff;
+    }
+    .subject-step.active .subject-step-dot {
+      background: #2563ff;
+      box-shadow: 0 0 0 4px rgba(37, 99, 255, 0.16);
+    }
+
+    .subject-left-footer-btn {
+      width: 100%;
+      padding: 16px 0;
+      border-radius: 12px;
+      border: none;
+      background: #eeeeee;
+      color: #b5b5b5;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: default;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    /* 활성화된 상태 */
+    .subject-left-footer-btn.enabled {
+      background: #2563ff;
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .subject-modal-right {
+      flex: 1;
+      padding: 40px 40px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background-color: #ffffff;
+    }
+
+    .subject-modal-title {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .subject-modal-subtitle {
+      font-size: 14px;
+      color: #9a9a9a;
+      margin-bottom: 18px;
+    }
+
+    .subject-input {
+      width: 100%;
+      border-radius: 10px;
+      border: solid 2px #f0f0f0;
+      padding: 16px 20px;
+      font-size: 14px;
+      background: #fafafa;
+      color: #777;
+      margin-bottom: 18px;
+    }
+    .subject-input::placeholder {
+      color: #b3b3b3;
+    }
+
+    .subject-grid-wrap {
+      flex: 1;
+      overflow: visible;
+    }
+    .subject-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px 8px;
+      height: 100%;
+      align-content: flex-start;
+    }
+
+    .subject-card {
+      background: #ffffff;
+      border: solid 2px #f0f0f0;
+      border-radius: 16px;
+      padding: 20px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .subject-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    /* 선택된 카드 */
+    .subject-card.is-selected {
+      border-color: #2563ff;
+      box-shadow: 0 0 0 2px rgba(37, 99, 255, 0.16);
+    }
+
+    .subject-card-bar {
+      width: 6px;
+      height: 26px;
+      border-radius: 999px;
+      background: #f5cf7a;
+    }
+
+    /* 결과 요약 영역 */
+    #selectionSummary {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #555;
+      line-height: 1.5;
+    }
+    #selectionSummary strong {
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app-root">
+  <!-- 사이드바 -->
+  <aside class="sidebar">
+    <div>
+      <div class="brand">
+        <div class="brand-logo"></div>
+        <div class="brand-name">로고</div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">메뉴</div>
+        <ul class="nav-list">
+          <a href="index.html" class="nav-link">
+            <li class="nav-item">
+              <div class="nav-icon">📋</div>
+              <span>Home</span>
+            </li>
+          </a>
+
+          <li class="nav-item active">
+            <div class="nav-icon">📂</div>
+            <span>프로젝트 관리</span>
+          </li>
+
+          <li class="nav-item">
+            <div class="nav-icon">🛒</div>
+            <span>프롬프트 마켓</span>
+          </li>
+          <li class="nav-item">
+            <div class="nav-icon">💬</div>
+            <span>빠른 대화</span>
+          </li>
+          <li class="nav-item">
+            <div class="nav-icon">⚙️</div>
+            <span>개인 설정</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="nav-footer">
+      <div class="logout">
+        <span>⏻</span>
+        <span>Logout</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- 메인 -->
+  <div class="app">
+    <div class="content-wrapper">
+      <main class="main-panel">
+        <header class="page-header">
+          <h1 class="page-title">프로젝트 관리</h1>
+        </header>
+
+        <div class="tabs-bar">
+          <div class="project-tabs">
+            <button class="tab-btn active">
+              All
+              <span class="tab-badge">12</span>
+            </button>
+            <button class="tab-btn">
+              사회
+              <span class="tab-badge">12</span>
+            </button>
+            <button class="tab-btn">
+              과학
+              <span class="tab-badge">12</span>
+            </button>
+            <button class="tab-btn">
+              영어
+              <span class="tab-badge">12</span>
+            </button>
+            <button class="tab-btn">
+              국어
+              <span class="tab-badge">12</span>
+            </button>
+          </div>
+
+          <div class="toolbar-right">
+            <button class="sort-btn">최근순</button>
+            <button class="new-folder-btn" id="openSubjectModalBtn">새로운 폴더</button>
+          </div>
+        </div>
+
+        <section class="project-grid">
+          <!-- 예시 카드 하나만 -->
+          <article class="project-card">
+            <div class="project-card-header">
+              <div>
+                <div class="subject-wrap">
+                  <div class="subject-color social"></div>
+                  <div>
+                    <div class="subject-title">생명과학</div>
+                    <div class="subject-meta">글쓰기</div>
+                  </div>
+                </div>
+              </div>
+              <div class="date-chip">
+                <span class="icon">⏰</span>
+                <span>3 Days ago</span>
+              </div>
+            </div>
+            <div class="project-body">
+              <div class="project-progress-labels">
+                <span>Progress</span>
+                <span class="value">75%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill"></div>
+              </div>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
+
+<!-- 모달 -->
+<div class="subject-modal-overlay" id="subjectModal">
+  <div class="subject-modal">
+    <div class="subject-modal-close" id="closeSubjectModalBtn">×</div>
+
+    <div class="subject-modal-left">
+      <div class="subject-stepper">
+        <div class="subject-step active" data-step="subject">
+          <div class="subject-step-dot-wrap">
+            <div class="subject-step-dot"></div>
+            <div class="subject-step-line"></div>
+          </div>
+          <div class="subject-step-label">과목</div>
+        </div>
+        <div class="subject-step" data-step="purpose">
+          <div class="subject-step-dot-wrap">
+            <div class="subject-step-dot"></div>
+            <div class="subject-step-line"></div>
+          </div>
+          <div class="subject-step-label">목적</div>
+        </div>
+        <div class="subject-step" data-step="prompt">
+          <div class="subject-step-dot-wrap">
+            <div class="subject-step-dot"></div>
+          </div>
+          <div class="subject-step-label">프롬프트</div>
+        </div>
+      </div>
+
+      <button class="subject-left-footer-btn" id="createFolderBtn" disabled>폴더 생성하기</button>
+    </div>
+
+    <div class="subject-modal-right">
+      <div>
+        <h1 class="subject-modal-title">공부하려는 과목이 무엇인가요?</h1>
+        <p class="subject-modal-subtitle">원하는 과목을 작성 혹은 선택해주세요</p>
+      </div>
+
+      <input class="subject-input" placeholder="원하는 과목을 작성해주세요" />
+
+      <div class="subject-grid-wrap">
+        <div class="subject-grid">
+          <!-- JS에서 채움 -->
+        </div>
+      </div>
+
+      <!-- 선택 결과 요약 -->
+      <div id="selectionSummary"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== 캔버스 스케일 =====
+  const BASE_WIDTH = 1440;
+  const BASE_HEIGHT = 900;
+
+  function updateScale() {
+    const sx = window.innerWidth / BASE_WIDTH;
+    const sy = window.innerHeight / BASE_HEIGHT;
+    const scale = Math.min(sx, sy);
+
+    const root = document.getElementById("app-root");
+    root.style.transform = `scale(${scale}) translate(-50%, -50%)`;
+  }
+
+  window.addEventListener("resize", updateScale);
+  updateScale();
+
+  // 탭 active 토글
+  const tabButtons = document.querySelectorAll(".tab-btn");
+  tabButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      tabButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+    });
+  });
+
+  // ===== 모달 열고 닫기 =====
+  const subjectModal = document.getElementById('subjectModal');
+  const openSubjectModalBtn = document.getElementById('openSubjectModalBtn');
+  const closeSubjectModalBtn = document.getElementById('closeSubjectModalBtn');
+  const createFolderBtn = document.getElementById('createFolderBtn');
+
+  openSubjectModalBtn.addEventListener('click', () => {
+    // 초기 상태 리셋
+    selectedSubject = null;
+    selectedPurpose = null;
+    selectedPrompt = null;
+    setStep('subject');
+    updateCreateButton();
+    updateSummary();
+    subjectModal.classList.add('is-open');
+  });
+
+  closeSubjectModalBtn.addEventListener('click', () => {
+    subjectModal.classList.remove('is-open');
+  });
+
+  subjectModal.addEventListener('click', (e) => {
+    if (e.target === subjectModal) {
+      subjectModal.classList.remove('is-open');
+    }
+  });
+
+  // ===== 단계/카드 로직 =====
+  const stepEls = document.querySelectorAll('.subject-step');
+  const modalTitleEl = document.querySelector('.subject-modal-title');
+  const modalSubtitleEl = document.querySelector('.subject-modal-subtitle');
+  const inputEl = document.querySelector('.subject-input');
+  const subjectGridEl = document.querySelector('.subject-grid');
+  const selectionSummaryEl = document.getElementById('selectionSummary');
+
+  const SUBJECT_OPTIONS = [
+    '국어', '수학', '한국지리',
+    '화법과 작문', '언어와 매체', '영어',
+    '물리 I', '생명과학 I', '한국사'
+  ];
+
+  const PURPOSE_OPTIONS = [
+    '글쓰기', '오답 노트', '세부특기사항',
+    '토론', '단순 학습', '시험 대비',
+    '발표 준비', '개념 정리', '프로젝트·리포트'
+  ];
+
+  const PROMPT_OPTIONS = [
+    '핵심 개념 정리', '한 줄 요약', '기출 문제 생성',
+    '오답 분석', '개념 비교', '서술형 연습',
+    '연습 퀴즈 생성', '단원 요약', '중요 개념 설명'
+  ];
+
+  let currentStep = 'subject';
+  let selectedSubject = null;
+  let selectedPurpose = null;
+  let selectedPrompt = null;
+
+  function updateCreateButton() {
+    const ready = !!(selectedSubject && selectedPurpose && selectedPrompt);
+    if (ready) {
+      createFolderBtn.disabled = false;
+      createFolderBtn.classList.add('enabled');
+    } else {
+      createFolderBtn.disabled = true;
+      createFolderBtn.classList.remove('enabled');
+    }
+  }
+
+  function updateSummary() {
+    if (selectedSubject && selectedPurpose && selectedPrompt) {
+      selectionSummaryEl.innerHTML = `
+        <strong>선택한 설정</strong><br>
+        과목: ${selectedSubject} / 목적: ${selectedPurpose} / 프롬프트: ${selectedPrompt}
+      `;
+    } else {
+      selectionSummaryEl.innerHTML = '';
+    }
+  }
+
+  function renderCards(list) {
+    subjectGridEl.innerHTML = '';
+    list.forEach(label => {
+      const btn = document.createElement('button');
+      btn.className = 'subject-card';
+
+      // 선택 표시
+      if (currentStep === 'subject' && label === selectedSubject) {
+        btn.classList.add('is-selected');
+      }
+      if (currentStep === 'purpose' && label === selectedPurpose) {
+        btn.classList.add('is-selected');
+      }
+      if (currentStep === 'prompt' && label === selectedPrompt) {
+        btn.classList.add('is-selected');
+      }
+
+      const bar = document.createElement('span');
+      bar.className = 'subject-card-bar';
+
+      const text = document.createElement('span');
+      text.textContent = label;
+
+      btn.appendChild(bar);
+      btn.appendChild(text);
+
+      // 클릭 시 선택 + 단계 처리
+      btn.addEventListener('click', () => {
+        if (currentStep === 'subject') {
+          selectedSubject = label;
+          // 과목 바뀌면 이후 선택 초기화
+          selectedPurpose = null;
+          selectedPrompt = null;
+          setStep('purpose');
+        } else if (currentStep === 'purpose') {
+          selectedPurpose = label;
+          // 목적 바뀌면 프롬프트 초기화
+          selectedPrompt = null;
+          setStep('prompt');
+        } else if (currentStep === 'prompt') {
+          selectedPrompt = label;
+          // 프롬프트 선택 후 결과창(요약) 느낌
+          renderCards(PROMPT_OPTIONS); // 선택 표시 갱신
+        }
+        updateCreateButton();
+        updateSummary();
+      });
+
+      subjectGridEl.appendChild(btn);
+    });
+  }
+
+  function setStep(step) {
+    currentStep = step;
+
+    // 왼쪽 step active 토글
+    stepEls.forEach(el => el.classList.remove('active'));
+    const active = document.querySelector(`.subject-step[data-step="${step}"]`);
+    if (active) active.classList.add('active');
+
+    if (step === 'subject') {
+      modalTitleEl.textContent = '공부하려는 과목이 무엇인가요?';
+      modalSubtitleEl.textContent = '원하는 과목을 작성 혹은 선택해주세요';
+      inputEl.placeholder = '원하는 과목을 작성해주세요';
+      renderCards(SUBJECT_OPTIONS);
+    } else if (step === 'purpose') {
+      modalTitleEl.textContent = '활용 목적이 무엇인가요?';
+      modalSubtitleEl.textContent = '원하는 사용 목적을 선택해주세요';
+      inputEl.placeholder = '원하는 사용 목적을 작성해주세요';
+      renderCards(PURPOSE_OPTIONS);
+    } else if (step === 'prompt') {
+      modalTitleEl.textContent = '프롬프트를 어떻게 사용하고 싶나요?';
+      modalSubtitleEl.textContent = '원하는 프롬프트 유형을 선택해주세요';
+      inputEl.placeholder = '예: 에세이 초안 작성, 시험 대비 문제 생성 등';
+      renderCards(PROMPT_OPTIONS);
+    }
+
+    // 단계 바꿀 때 요약은 유지/리셋
+    if (step !== 'prompt') {
+      // 프롬프트 단계 아니면 사실상 결과창 의미가 없으니 요약은 일단 그대로 둬도 되고,
+      // 깔끔하게 하려면 비워도 됨. 여기서는 유지.
+    }
+  }
+
+  // 왼쪽 스텝 직접 클릭해도 단계 이동
+  stepEls.forEach(el => {
+    el.addEventListener('click', () => {
+      const step = el.dataset.step;
+      setStep(step);
+      updateCreateButton();
+      updateSummary();
+    });
+  });
+
+  // 처음 모달을 열었을 때를 대비해 한 번 렌더
+  renderCards(SUBJECT_OPTIONS);
+
+  // 폴더 생성 버튼 클릭 → search.html로 이동
+  createFolderBtn.addEventListener('click', () => {
+    if (createFolderBtn.disabled) return;
+
+    const params = new URLSearchParams({
+      subject: selectedSubject || '',
+      purpose: selectedPurpose || '',
+      prompt: selectedPrompt || ''
+    });
+
+    // search.html로 이동 (선택값 같이 전달)
+    window.location.href = `search.html?${params.toString()}`;
+  });
+</script>
+
+</body>
+</html>

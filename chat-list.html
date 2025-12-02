@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>프로젝트 관리 대시보드</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f4f5ff;
+      --sidebar-bg: #ffffff;
+      --card-bg: #ffffff;
+      --primary: #4b6fff;
+      --primary-soft: #eef1ff;
+      --accent: #ff9f43;
+      --text-main: #1f2544;
+      --text-muted: #a1a7c5;
+      --border-soft: #e3e6ff;
+      --danger: #ff5b5b;
+      --success: #32c48d;
+      --shadow-soft: 0 14px 40px rgba(15, 29, 76, 0.08);
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f4f5ff;
+      color: var(--text-main);
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    /* 전체 캔버스 */
+    #app-root {
+      width: 1440px;
+      height: 900px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform-origin: top left;
+      overflow: hidden;
+    }
+
+    .app {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+      padding: 12px;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 230px;
+      background: var(--sidebar-bg);
+      border-radius: var(--radius-lg);
+      padding: 28px 22px 22px;
+      box-shadow: var(--shadow-soft);
+      position: absolute;
+      top: 24px;
+      bottom: 24px;
+      left: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      background: #4b6fff;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .brand-name {
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .nav-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .nav-list {
+      list-style: none;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      color: var(--text-muted);
+      font-size: 13px;
+      cursor: pointer;
+      margin-bottom: 4px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .nav-item .nav-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      background: #f3f5ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .nav-item.active {
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .nav-item.active .nav-icon {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .logout {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-muted);
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* MAIN CONTENT */
+    .content-wrapper {
+      margin-left: 260px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+      height: 100%;
+    }
+
+    .main-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      height: 100%;
+      padding-right: 40px;
+    }
+
+    .page-header {
+      margin-bottom: 4px;
+      margin-top: 32px;
+    }
+
+    .page-title {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .tabs-bar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-top: 12px;
+      border-bottom: 1px solid #e8e8f5;
+      padding-bottom: 8px;
+    }
+
+    .tabs-spacer {
+      flex: 1;
+      height: 24px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 6px 0;
+      font-size: 14px;
+      cursor: pointer;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
+
+    .tab-btn .tab-badge {
+      min-width: 20px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #f2f3f8;
+      font-size: 11px;
+      color: #8f93ac;
+    }
+
+    .tab-btn.active {
+      color: #111;
+      font-weight: 600;
+    }
+
+    .tab-btn.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -9px;
+      width: 100%;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--primary);
+    }
+
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sort-btn {
+      border: none;
+      background: transparent;
+      font-size: 12px;
+      color: #444;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .sort-btn::before {
+      content: "↕";
+      font-size: 12px;
+    }
+
+    .new-folder-btn {
+      border: none;
+      background: #3763ff;
+      color: #fff;
+      font-size: 12px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    /* ===== 대화 리스트 카드 ===== */
+
+    .thread-list {
+      margin-top: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      width: 100%;
+    }
+
+    .thread-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 20px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 10px 30px rgba(15, 29, 76, 0.06);
+      cursor: pointer;
+      transition: transform 0.08s ease, box-shadow 0.08s ease;
+    }
+
+    .thread-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 40px rgba(15, 29, 76, 0.1);
+    }
+
+    .thread-main {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .thread-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #222431;
+    }
+
+    .thread-meta {
+      font-size: 11px;
+      color: #a3a6b7;
+    }
+
+    .avatar-stack {
+      display: flex;
+      align-items: center;
+    }
+
+    .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      border: 2px solid #fff;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-image: url("photo.png");
+    }
+
+    .avatar + .avatar {
+      margin-left: -10px;
+    }
+
+    /* ===== 모달 ===== */
+    .subject-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+    .subject-modal-overlay.is-open {
+      display: flex;
+    }
+
+    .subject-modal {
+      width: 960px;
+      max-width: calc(100% - 40px);
+      height: 560px;
+      max-height: calc(100% - 40px);
+      background: #ffffff;
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      display: flex;
+      overflow: hidden;
+      position: relative;
+      font-family: inherit;
+    }
+
+    .subject-modal-close {
+      position: absolute;
+      right: 24px;
+      top: 20px;
+      font-size: 22px;
+      cursor: pointer;
+      color: #111;
+    }
+
+    /* 왼쪽 영역 */
+    .subject-modal-left {
+      width: 260px;
+      background: #ffffff;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 6px solid #f0f0f0;
+    }
+
+    .prompt-nav-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #2563ff;
+    }
+
+    .prompt-nav-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #2563ff;
+    }
+
+    .start-chat-btn {
+      width: 100%;
+      padding: 16px 0;
+      border-radius: 14px;
+      border: none;
+      background: #e5e5e5;
+      color: #b5b5b5;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: default;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .start-chat-btn.enabled {
+      background: #2563ff;
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    /* 오른쪽 영역 */
+    .subject-modal-right {
+      flex: 1;
+      padding: 40px 40px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background-color: #ffffff;
+      position: relative;
+    }
+
+    .subject-modal-title {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .subject-modal-subtitle {
+      font-size: 14px;
+      color: #9a9a9a;
+      margin-bottom: 18px;
+    }
+
+    /* 검색 바 */
+    .prompt-search-wrapper {
+      margin-bottom: 8px;
+    }
+
+    .prompt-search-box {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      border-radius: 14px;
+      background: #f5f5f5;
+      padding: 12px 16px;
+      font-size: 14px;
+      color: #777;
+    }
+
+    .prompt-search-icon {
+      margin-right: 10px;
+      font-size: 15px;
+      opacity: 0.7;
+    }
+
+    .prompt-search-input {
+      border: none;
+      background: transparent;
+      outline: none;
+      flex: 1;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .prompt-search-input::placeholder {
+      color: #b3b3b3;
+    }
+
+    /* 저장한 항목 / 칩 */
+    .prompt-section-label {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .prompt-chip-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .prompt-chip {
+      border-radius: 14px;
+      border: 1px solid #e2e2e2;
+      padding: 10px 18px;
+      background: #ffffff;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .prompt-chip:hover {
+      background: #f5f5f5;
+    }
+
+    .prompt-chip.is-selected {
+      border-color: #2563ff;
+      background: #f3f6ff;
+      box-shadow: 0 0 0 1px rgba(37, 99, 255, 0.15);
+    }
+
+    /* 프롬프트 설명 영역 */
+    .prompt-detail {
+      flex: 1;
+      border-radius: 18px;
+      background: #f5f5f5;
+      padding: 20px 26px;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.7;
+      overflow-y: auto;
+    }
+
+    .prompt-detail ul {
+      padding-left: 18px;
+      margin: 0;
+    }
+
+    .prompt-detail-placeholder {
+      color: #aaaaaa;
+    }
+
+    /* === 검색 추천 패널 === */
+    .prompt-suggest-panel {
+      display: none;
+      margin-top: 8px;
+      border-radius: 16px;
+      background: #ffffff;
+      border: 1px solid #eeeeee;
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
+      max-height: 320px;
+      overflow: hidden;
+      position: relative;
+      z-index: 5;
+    }
+
+    .prompt-suggest-panel.is-open {
+      display: block;
+    }
+
+    .suggest-tabs {
+      display: flex;
+      gap: 8px;
+      padding: 10px 16px 8px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .suggest-tab {
+      border: none;
+      background: transparent;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      color: #8f93ac;
+      cursor: pointer;
+    }
+
+    .suggest-tab.active {
+      background: #f5f5f5;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .suggest-list {
+      list-style: none;
+      margin: 0;
+      padding: 4px 0 8px;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+
+    .suggest-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 18px;
+      font-size: 14px;
+      cursor: pointer;
+      color: #333;
+    }
+
+    .suggest-item:hover {
+      background: #f7f7f7;
+    }
+
+    .suggest-item-right {
+      font-size: 12px;
+      color: #a1a7c5;
+    }
+
+    /* 기본 영역(저장한 항목 + 상세) 래퍼 */
+    #promptDefaultArea {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 12px;
+      flex: 1;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app-root">
+  <!-- 사이드바 -->
+  <aside class="sidebar">
+    <div>
+      <div class="brand">
+        <div class="brand-logo"></div>
+        <div class="brand-name">로고</div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">메뉴</div>
+        <ul class="nav-list">
+          <a href="index.html" class="nav-link">
+            <li class="nav-item">
+              <div class="nav-icon">📋</div>
+              <span>Home</span>
+            </li>
+          </a>
+
+          <li class="nav-item active">
+            <div class="nav-icon">📂</div>
+            <span>프로젝트 관리</span>
+          </li>
+
+          <li class="nav-item">
+            <div class="nav-icon">🛒</div>
+            <span>프롬프트 마켓</span>
+          </li>
+
+          <a href="fast_search.html" class="nav-link">
+            <li class="nav-item">
+              <div class="nav-icon">💬</div>
+              <span>빠른 대화</span>
+            </li>
+          </a>
+
+          <li class="nav-item">
+            <div class="nav-icon">⚙️</div>
+            <span>개인 설정</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="nav-footer">
+      <div class="logout">
+        <span>⏻</span>
+        <span>Logout</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- 메인 -->
+  <div class="app">
+    <div class="content-wrapper">
+      <main class="main-panel">
+        <header class="page-header">
+          <h1 class="page-title">사회</h1>
+        </header>
+
+        <div class="tabs-bar">
+          <div class="tabs-spacer">
+            <button class="tab-btn active">
+              글쓰기
+              <span class="tab-badge">12</span>
+            </button>
+          </div>
+          <div class="toolbar-right">
+            <button class="sort-btn">최근순</button>
+            <button class="new-folder-btn" id="openSubjectModalBtn">새로운 대화</button>
+          </div>
+        </div>
+
+        <!-- 대화 리스트 -->
+        <section class="thread-list">
+        <a href="chat_1.html" class="nav-link">
+          <article class="thread-card">
+            <div class="thread-main">
+              <div class="thread-title">AI 추천 알고리즘이 우리의 선택을 더 ‘똑똑하게’ 만들까, 더 ‘좁게’ 만들까?</div>
+              <div class="thread-meta">글쓰기</div>
+            </div>
+            <div class="avatar-stack">
+              <div class="avatar"></div>
+              <div class="avatar"></div>
+              <div class="avatar"></div>
+            </div>
+          </article>
+        </a>
+          <article class="thread-card">
+            <div class="thread-main">
+              <div class="thread-title">AI 추천 알고리즘이 우리의 선택을 더 ‘똑똑하게’ 만들까, 더 ‘좁게’ 만들까?</div>
+              <div class="thread-meta">글쓰기</div>
+            </div>
+            <div class="avatar-stack">
+              <div class="avatar"></div>
+              <div class="avatar"></div>
+              <div class="avatar"></div>
+            </div>
+          </article>
+
+          <article class="thread-card">
+            <div class="thread-main">
+              <div class="thread-title">AI 추천 알고리즘이 우리의 선택을 더 ‘똑똑하게’ 만들까, 더 ‘좁게’ 만들까?</div>
+              <div class="thread-meta">글쓰기</div>
+            </div>
+            <div class="avatar-stack">
+              <div class="avatar"></div>
+              <div class="avatar"></div>
+              <div class="avatar"></div>
+            </div>
+          </article>
+
+          <article class="thread-card">
+            <div class="thread-main">
+              <div class="thread-title">AI 추천 알고리즘이 우리의 선택을 더 ‘똑똑하게’ 만들까, 더 ‘좁게’ 만들까?</div>
+              <div class="thread-meta">글쓰기</div>
+            </div>
+            <div class="avatar-stack">
+              <div class="avatar"></div>
+              <div class="avatar"></div>
+              <div class="avatar"></div>
+            </div>
+          </article>
+
+          <article class="thread-card">
+            <div class="thread-main">
+              <div class="thread-title">AI 추천 알고리즘이 우리의 선택을 더 ‘똑똑하게’ 만들까, 더 ‘좁게’ 만들까?</div>
+              <div class="thread-meta">글쓰기</div>
+            </div>
+            <div class="avatar-stack">
+              <div class="avatar"></div>
+              <div class="avatar"></div>
+              <div class="avatar"></div>
+            </div>
+          </article>
+
+          <article class="thread-card">
+            <div class="thread-main">
+              <div class="thread-title">AI 추천 알고리즘이 우리의 선택을 더 ‘똑똑하게’ 만들까, 더 ‘좁게’ 만들까?</div>
+              <div class="thread-meta">글쓰기</div>
+            </div>
+            <div class="avatar-stack">
+              <div class="avatar"></div>
+              <div class="avatar"></div>
+              <div class="avatar"></div>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
+
+<!-- 모달 : 새로운 대화(프롬프트 선택) -->
+<div class="subject-modal-overlay" id="subjectModal">
+  <div class="subject-modal">
+    <div class="subject-modal-close" id="closeSubjectModalBtn">×</div>
+
+    <!-- 왼쪽 -->
+    <div class="subject-modal-left">
+      <div class="prompt-nav-title">
+        <span class="prompt-nav-dot"></span>
+        <span>프롬프트</span>
+      </div>
+
+      <button class="start-chat-btn" id="startChatBtn" disabled>
+        대화 시작하기
+      </button>
+    </div>
+
+    <!-- 오른쪽 -->
+    <div class="subject-modal-right">
+      <div>
+        <h1 class="subject-modal-title">어떤 스타일로 대화하고 싶으신가요?</h1>
+        <p class="subject-modal-subtitle">
+          원하는 프롬프트를 검색하거나 선택해주세요
+        </p>
+      </div>
+
+      <div class="prompt-search-wrapper">
+        <div class="prompt-search-box">
+          <span class="prompt-search-icon">🔍</span>
+          <input
+            class="prompt-search-input"
+            type="text"
+            placeholder="Search"
+            id="promptSearchInput"
+          />
+        </div>
+      </div>
+
+      <!-- 검색 추천 패널 -->
+      <div class="prompt-suggest-panel" id="promptSuggestPanel">
+        <div class="suggest-tabs">
+          <button class="suggest-tab active">All</button>
+          <button class="suggest-tab">프롬프트</button>
+          <button class="suggest-tab">저장됨</button>
+        </div>
+        <ul class="suggest-list">
+          <li class="suggest-item" data-id="writing-1">
+            <span>설명형 글쓰기 프롬프트</span>
+            <span class="suggest-item-right">Prompt</span>
+          </li>
+          <li class="suggest-item" data-id="writing-2">
+            <span>비교·대조 글쓰기 프롬프트</span>
+            <span class="suggest-item-right">Prompt</span>
+          </li>
+          <li class="suggest-item" data-id="writing-3">
+            <span>독자를 고려한 친절한 설명 프롬프트</span>
+            <span class="suggest-item-right">Prompt</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- 기본 영역: 저장한 항목 + 상세 -->
+      <div id="promptDefaultArea">
+        <div>
+          <div class="prompt-section-label">저장한 항목</div>
+          <div class="prompt-chip-row">
+            <button class="prompt-chip" data-id="writing-1">설명형 글쓰기 프롬프트</button>
+            <button class="prompt-chip" data-id="writing-2">비교•대조 글쓰기 프롬프트</button>
+            <button class="prompt-chip" data-id="writing-3">독자를 고려한 친절한 설명 프롬프트</button>
+          </div>
+        </div>
+
+        <div class="prompt-detail" id="promptDetail">
+          <p class="prompt-detail-placeholder">
+            프롬프트를 선택하면 상세 설명이 여기에 표시됩니다.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== 캔버스 스케일 =====
+  const BASE_WIDTH = 1440;
+  const BASE_HEIGHT = 900;
+
+  function updateScale() {
+    const sx = window.innerWidth / BASE_WIDTH;
+    const sy = window.innerHeight / BASE_HEIGHT;
+    const scale = Math.min(sx, sy);
+
+    const root = document.getElementById("app-root");
+    root.style.transform = `scale(${scale}) translate(-50%, -50%)`;
+  }
+
+  window.addEventListener("resize", updateScale);
+  updateScale();
+
+  // ===== 모달 열고 닫기 =====
+  const subjectModal = document.getElementById("subjectModal");
+  const openSubjectModalBtn = document.getElementById("openSubjectModalBtn");
+  const closeSubjectModalBtn = document.getElementById("closeSubjectModalBtn");
+  const startChatBtn = document.getElementById("startChatBtn");
+
+  function openSubjectModal() {
+    selectedPromptId = null;
+    startChatBtn.disabled = true;
+    startChatBtn.classList.remove("enabled");
+    promptChips.forEach((c) => c.classList.remove("is-selected"));
+    promptDetail.innerHTML =
+      '<p class="prompt-detail-placeholder">프롬프트를 선택하면 상세 설명이 여기에 표시됩니다.</p>';
+    exitSearchMode();
+    subjectModal.classList.add("is-open");
+  }
+
+  if (openSubjectModalBtn) {
+    openSubjectModalBtn.addEventListener("click", openSubjectModal);
+  }
+
+  closeSubjectModalBtn.addEventListener("click", () => {
+    subjectModal.classList.remove("is-open");
+  });
+
+  subjectModal.addEventListener("click", (e) => {
+    // 오버레이(검은 배경) 클릭 시 닫기
+    if (e.target === subjectModal) {
+      subjectModal.classList.remove("is-open");
+    }
+  });
+
+  // ===== 프롬프트 데이터 & 선택 로직 =====
+  const PROMPT_ITEMS = {
+    "writing-1": {
+      title: "글쓰기용 프롬프트 1",
+      description: [
+        "600~800자 (공백 포함)",
+        "서론–본론–결론 구조로 작성",
+        "~하다 체"
+      ]
+    },
+    "writing-2": {
+      title: "글쓰기용 프롬프트 2",
+      description: [
+        "예시와 근거를 2개 이상 포함",
+        "비교·대조 방식으로 전개",
+        "마지막 문단에 한 문장 요약 추가"
+      ]
+    },
+    "writing-3": {
+      title: "글쓰기용 프롬프트 3",
+      description: [
+        "독자의 입장을 고려한 설명형 글",
+        "전문 용어는 쉽게 풀어 쓰기",
+        "중학생도 이해할 수 있는 난이도"
+      ]
+    }
+  };
+
+  const promptChips = document.querySelectorAll(".prompt-chip");
+  const promptDetail = document.getElementById("promptDetail");
+  const promptSearchInput = document.getElementById("promptSearchInput");
+  const promptSuggestPanel = document.getElementById("promptSuggestPanel");
+  const promptDefaultArea = document.getElementById("promptDefaultArea");
+  const modalRight = document.querySelector(".subject-modal-right");
+  const suggestItems = document.querySelectorAll(".suggest-item");
+
+  let selectedPromptId = null;
+  let searchMode = false;
+
+  function selectPromptById(id) {
+    selectedPromptId = id;
+
+    // 칩 선택 상태 업데이트
+    promptChips.forEach((c) => {
+      if (c.dataset.id === id) c.classList.add("is-selected");
+      else c.classList.remove("is-selected");
+    });
+
+    const item = PROMPT_ITEMS[id];
+    if (item) {
+      const listHtml =
+        "<ul>" + item.description.map((li) => `<li>${li}</li>`).join("") + "</ul>";
+      promptDetail.innerHTML = listHtml;
+    }
+
+    // 버튼 활성화
+    startChatBtn.disabled = false;
+    startChatBtn.classList.add("enabled");
+  }
+
+  // 칩 클릭
+  promptChips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      selectPromptById(chip.dataset.id);
+    });
+  });
+
+  // 추천 리스트 클릭
+  suggestItems.forEach((item) => {
+    item.addEventListener("click", () => {
+      const id = item.dataset.id;
+      selectPromptById(id);
+      exitSearchMode();
+    });
+  });
+
+  // 검색 모드 on/off
+  function enterSearchMode() {
+    searchMode = true;
+    promptSuggestPanel.classList.add("is-open");
+    promptDefaultArea.style.display = "none";
+  }
+
+  function exitSearchMode() {
+    searchMode = false;
+    promptSuggestPanel.classList.remove("is-open");
+    promptDefaultArea.style.display = "flex";
+  }
+
+  promptSearchInput.addEventListener("focus", enterSearchMode);
+  promptSearchInput.addEventListener("click", (e) => {
+    e.stopPropagation();
+    enterSearchMode();
+  });
+
+  // 오른쪽 패널에서, 검색 패널/검색창 밖을 클릭하면 검색 모드 종료
+  modalRight.addEventListener("click", (e) => {
+    if (!searchMode) return;
+
+    const withinSearch =
+      promptSearchInput.contains(e.target) || promptSuggestPanel.contains(e.target);
+
+    if (!withinSearch) {
+      exitSearchMode();
+    }
+  });
+
+  // 대화 시작하기 → new_chat.html 이동
+  startChatBtn.addEventListener("click", () => {
+    if (startChatBtn.disabled || !selectedPromptId) return;
+
+    const params = new URLSearchParams({ promptId: selectedPromptId });
+    window.location.href = `new_chat.html?${params.toString()}`;
+  });
+
+  // 기존 대화 카드 클릭 시 chat-list.html 로 이동
+  document.querySelectorAll('.thread-card').forEach(card => {
+    card.addEventListener('click', () => {
+      window.location.href = 'chat-list.html';
+    });
+  });
+</script>
+
+</body>
+</html>
