@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>기초 프롬프트</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f4f5ff;
+      --sidebar-bg: #ffffff;
+      --card-bg: #ffffff;
+      --primary: #4b6fff;
+      --primary-soft: #eef1ff;
+      --accent: #ff9f43;
+      --text-main: #1f2544;
+      --text-muted: #a1a7c5;
+      --border-soft: #e3e6ff;
+      --danger: #ff5b5b;
+      --success: #32c48d;
+      --shadow-soft: 0 14px 40px rgba(15, 29, 76, 0.08);
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f4f5ff;
+      color: var(--text-main);
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    /* 전체 캔버스 */
+    #app-root {
+      width: 1440px;
+      height: 900px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform-origin: top left;
+      overflow: hidden;
+    }
+
+    .app {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+      padding: 12px;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 230px;
+      background: var(--sidebar-bg);
+      border-radius: var(--radius-lg);
+      padding: 28px 22px 22px;
+      box-shadow: var(--shadow-soft);
+      position: absolute;
+      top: 24px;
+      bottom: 24px;
+      left: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      background: #4b6fff;
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .brand-name {
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .nav-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .nav-list {
+      list-style: none;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      color: var(--text-muted);
+      font-size: 13px;
+      cursor: pointer;
+      margin-bottom: 4px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .nav-item .nav-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      background: #f3f5ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .nav-item.active {
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .nav-item.active .nav-icon {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .logout {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-muted);
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    /* MAIN CONTENT */
+    .content-wrapper {
+      margin-left: 260px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 24px;
+      height: 100%;
+    }
+
+    .main-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      height: 100%;
+      padding-right: 40px;
+      overflow: visible;
+    }
+
+    .page-header {
+      margin-bottom: 4px;
+      margin-top: 32px;
+    }
+
+    .page-title {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .tabs-bar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-top: 12px;
+      border-bottom: 1px solid #e8e8f5;
+      padding-bottom: 8px;
+    }
+
+    .tabs-spacer {
+      flex: 1;
+      height: 24px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 6px 0;
+      font-size: 14px;
+      cursor: pointer;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+    }
+
+    .tab-btn .tab-badge {
+      min-width: 20px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #f2f3f8;
+      font-size: 11px;
+      color: #8f93ac;
+    }
+
+    .tab-btn.active {
+      color: #111;
+      font-weight: 600;
+    }
+
+    .tab-btn.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -9px;
+      width: 100%;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--primary);
+    }
+
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* 🔹 장바구니 아이콘 버튼 */
+    .cart-btn {
+      border: none;
+      background: none;
+      color: #ffffff;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      /* box-shadow: 0 6px 18px rgba(15, 29, 76, 0.25); */
+    }
+
+    /* ===== 공유 프롬프트 마켓 레이아웃 ===== */
+
+    .prompt-market {
+      margin-top: 0px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      flex: 1;
+      overflow: visible;
+      padding-bottom: 20px;
+    }
+
+    .prompt-market-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      overflow: visible;
+    }
+
+    .prompt-tabs {
+      display: flex;
+      gap: 20px;
+      font-size: 14px;
+      overflow: visible;
+    }
+
+    .prompt-tab {
+      position: relative;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      padding: 6px 0;
+      color: #9ba0b9;
+      font-size: 14px;
+    }
+
+    .prompt-tab.active {
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .prompt-tab.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -8px;
+      width: 100%;
+      height: 3px;
+      border-radius: 999px;
+      background: var(--primary);
+    }
+
+    .prompt-tab-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 4px;
+      margin-left: 6px;
+      font-size: 11px;
+      border-radius: 999px;
+      background: #ffffff;
+      color: #8a90aa;
+    }
+
+    /* 검색바 */
+    .prompt-search-bar {
+      margin-top: 4px;
+      width: 100%;
+      border-radius: 999px;
+      background: #ffffff;
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: #ffffff;
+    }
+
+    .prompt-search-bar input {
+      border: none;
+      outline: none;
+      background: transparent;
+      flex: 1;
+      font-size: 14px;
+      color: #4b5563;
+    }
+
+    .prompt-search-bar input::placeholder {
+      color: #a1a7c5;
+    }
+
+    /* 상단 카드 3개 */
+    .prompt-card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 4px;
+    }
+
+    .prompt-card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 20px 18px 16px;
+      box-shadow: 0 14px 38px rgba(15, 29, 76, 0.06);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .prompt-rank-badge {
+      position: absolute;
+      top: 14px;
+      left: 18px;
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: #111827;
+      color: #ffffff;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+
+    .prompt-thumb-wrapper {
+      margin-top: 12px;
+      width: 64px;
+      height: 64px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #d1d5db;
+    }
+
+    .prompt-thumb {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .prompt-card-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 6px;
+      text-align: center;
+      color: #111827;
+    }
+
+    .prompt-card-subtitle {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .prompt-save-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 22px;
+      font-size: 13px;
+      cursor: pointer;
+      background: #e5e7eb;
+      color: #111827;
+      margin-bottom: 10px;
+    }
+
+    .prompt-card-meta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .meta-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #d1d5db;
+    }
+
+    /* 하단 리스트 */
+    .prompt-list {
+      margin-top: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .prompt-list-item {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 12px 18px;
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) auto auto;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 28px rgba(15, 29, 76, 0.05);
+    }
+
+    .prompt-list-main {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .prompt-list-thumb {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: #d1d5db;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .prompt-list-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .prompt-list-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111827;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .prompt-list-subtitle {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .prompt-list-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .prompt-list-meta-block {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .prompt-list-save-btn {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 20px;
+      font-size: 12px;
+      background: #e5e7eb;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .prompt-save-btn.saved,
+    .prompt-list-save-btn.saved {
+      background: #4b6fff;
+      color: #ffffff;
+    }
+
+    /* === 프롬프트 마켓 서브 메뉴 === */
+    .nav-item-has-children {
+      justify-content: space-between;
+    }
+
+    .nav-item-label-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-caret {
+      font-size: 10px;
+      color: #c0c4d8;
+    }
+
+    .nav-sublist {
+      list-style: none;
+      margin: 2px 0 8px 34px;
+      padding: 0;
+      display: none;
+    }
+
+    .nav-sublist.open {
+      display: block;
+    }
+
+    .nav-subitem {
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      width: 140px;
+      color: #8d90aa;
+      cursor: pointer;
+      margin-bottom: 2px;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .nav-subitem:hover {
+      background: #f3f5ff;
+      color: #4b6fff;
+    }
+
+    .nav-subitem.active {
+      background: #e1e6ff;
+      color: #4b6fff;
+      font-weight: 500;
+    }
+    /* 프롬프트 마켓 그룹 박스 */
+.nav-group {
+  padding: 2px 2px;
+  border-radius: 14px;
+  margin-bottom: 6px;
+  transition: background 0.15s ease;
+}
+
+.nav-group-active {
+  background: #f3f5ff;      /* 살짝 파란 배경 */
+}
+
+/* 호버 시 살짝 더 진하게 */
+.nav-group:hover {
+  background: #eef1ff;
+}
+
+  </style>
+</head>
+<body>
+
+<div id="app-root">
+  <!-- 사이드바 -->
+  <aside class="sidebar">
+    <div>
+      <div class="brand">
+        <div class="brand-logo"></div>
+        <div class="brand-name">로고</div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">메뉴</div>
+        <ul class="nav-list">
+          <a href="index.html" class="nav-link">
+            <li class="nav-item">
+              <div class="nav-icon">📋</div>
+              <span>Home</span>
+            </li>
+          </a>
+
+          <a href="project_folder.html" class="nav-link">
+            <li class="nav-item">
+              <div class="nav-icon">📂</div>
+              <span>프로젝트 관리</span>
+            </li>
+          </a>
+
+          <!-- 🔽 프롬프트 마켓 + 서브 메뉴 -->
+        <div class="nav-group nav-group-active">
+          <li class="nav-item active nav-item-has-children" id="promptNavToggle">
+            <div class="nav-item-label-wrap">
+              <div class="nav-icon">🛒</div>
+              <span>프롬프트 마켓</span>
+            </div>
+            <span class="nav-caret">▾</span>
+          </li>
+
+          <ul class="nav-sublist open" id="promptSublist">
+            <a href="market1.html" class="nav-link">
+              <li class="nav-subitem active">기초 프롬프트</li>
+            </a>
+            <a href="market2.html" class="nav-link">
+              <li class="nav-subitem">관점 프롬프트</li>
+            </a>
+          </ul>
+        </div>
+          <!-- 🔼 프롬프트 마켓 서브 메뉴 끝 -->
+
+          <a href="fast_search.html" class="nav-link">
+            <li class="nav-item">
+              <div class="nav-icon">💬</div>
+              <span>빠른 대화</span>
+            </li>
+          </a>
+
+          <li class="nav-item">
+            <div class="nav-icon">⚙️</div>
+            <span>개인 설정</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="nav-footer">
+      <div class="logout">
+        <span>⏻</span>
+        <span>Logout</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- 메인 -->
+  <div class="app">
+    <div class="content-wrapper">
+      <main class="main-panel">
+        <header class="page-header">
+          <h1 class="page-title">기초 프롬프트 마켓</h1>
+        </header>
+
+        <!-- 상단 탭 + 오른쪽 장바구니 아이콘 -->
+        <div class="tabs-bar">
+          <div class="prompt-tabs">
+            <!-- 기본: 전체보기 활성화 -->
+            <button class="prompt-tab active" data-view="all">전체보기</button>
+            <button class="prompt-tab" data-view="rank">랭킹순</button>
+            <button class="prompt-tab">
+              과목별
+              <span class="prompt-tab-badge">12</span>
+            </button>
+          </div>
+        
+          <!-- 🔹 장바구니 아이콘 -->
+          <button class="cart-btn" aria-label="장바구니">🛒</button>
+        </div>
+        
+
+        <!-- 공유 프롬프트 마켓 레이아웃 -->
+        <section class="prompt-market">
+          <!-- 검색바 -->
+          <div class="prompt-search-bar">
+            <span>🔍</span>
+            <input type="text" placeholder="Search" />
+          </div>
+
+          <!-- 상단 카드 3개 -->
+          <div class="prompt-card-grid">
+            <article class="prompt-card">
+              <div class="prompt-rank-badge">1</div>
+              <div class="prompt-thumb-wrapper">
+                <div class="prompt-thumb" style="background-image:url('thumb1.png'); background-size:cover; background-position:center;"></div>
+              </div>
+              <div class="prompt-card-title">자신감 있는 발표</div>
+              <div class="prompt-card-subtitle">따뜻한프린터</div>
+              <button class="prompt-save-btn">저장하기</button>
+              <div class="prompt-card-meta">
+                <span class="meta-dot"></span><span>005</span>
+                <span class="meta-dot"></span><span>005</span>
+                <span class="meta-dot"></span><span>005</span>
+              </div>
+            </article>
+
+            <article class="prompt-card">
+              <div class="prompt-rank-badge">2</div>
+              <div class="prompt-thumb-wrapper">
+                <div class="prompt-thumb" style="background-image:url('thumb2.png'); background-size:cover; background-position:center;"></div>
+              </div>
+              <div class="prompt-card-title">아이디어 종폭기</div>
+              <div class="prompt-card-subtitle">촘촘느낌거리</div>
+              <button class="prompt-save-btn">저장하기</button>
+              <div class="prompt-card-meta">
+                <span class="meta-dot"></span><span>005</span>
+                <span class="meta-dot"></span><span>005</span>
+                <span class="meta-dot"></span><span>005</span>
+              </div>
+            </article>
+
+            <article class="prompt-card">
+              <div class="prompt-rank-badge">3</div>
+              <div class="prompt-thumb-wrapper">
+                <div class="prompt-thumb" style="background-image:url('thumb3.png'); background-size:cover; background-position:center;"></div>
+              </div>
+              <div class="prompt-card-title">교과 개념 확장</div>
+              <div class="prompt-card-subtitle">즐거운사자</div>
+              <button class="prompt-save-btn">저장하기</button>
+              <div class="prompt-card-meta">
+                <span class="meta-dot"></span><span>005</span>
+                <span class="meta-dot"></span><span>005</span>
+                <span class="meta-dot"></span><span>005</span>
+              </div>
+            </article>
+          </div>
+
+          <!-- 하단 리스트 -->
+          <div class="prompt-list">
+            <div class="prompt-list-item">
+              <div class="prompt-list-main">
+                <div class="prompt-list-thumb" style="background-image:url('thumb4.png'); background-size:cover; background-position:center;"></div>
+                <div class="prompt-list-text">
+                  <div class="prompt-list-title">두괄식 설명</div>
+                  <div class="prompt-list-subtitle">기분좋은코끼리</div>
+                </div>
+              </div>
+              <div class="prompt-list-meta">
+                <span class="prompt-list-meta-block">
+                  <span class="meta-dot"></span><span>005</span>
+                </span>
+                <span class="prompt-list-meta-block">
+                  <span class="meta-dot"></span><span>005</span>
+                </span>
+                <span class="prompt-list-meta-block">
+                  <span class="meta-dot"></span><span>005</span>
+                </span>
+              </div>
+              <button class="prompt-list-save-btn">저장하기</button>
+            </div>
+          
+            <div class="prompt-list-item">
+              <div class="prompt-list-main">
+                <div class="prompt-list-thumb" style="background-image:url('thumb5.png'); background-size:cover; background-position:center;"></div>
+                <div class="prompt-list-text">
+                  <div class="prompt-list-title">설득력 강화 스피치</div>
+                  <div class="prompt-list-subtitle">행복한호랑이</div>
+                </div>
+              </div>
+              <div class="prompt-list-meta">
+                <span class="prompt-list-meta-block">
+                  <span class="meta-dot"></span><span>005</span>
+                </span>
+                <span class="prompt-list-meta-block">
+                  <span class="meta-dot"></span><span>005</span>
+                </span>
+                <span class="prompt-list-meta-block">
+                  <span class="meta-dot"></span><span>005</span>
+                </span>
+              </div>
+              <button class="prompt-list-save-btn">저장하기</button>
+            </div>
+          
+            <div class="prompt-list-item">
+              <div class="prompt-list-main">
+                <div class="prompt-list-thumb" style="background-image:url('thumb6.png'); background-size:cover; background-position:center;"></div>
+                <div class="prompt-list-text">
+                  <div class="prompt-list-title">상황 맥락 맞춤 설명</div>
+                  <div class="prompt-list-subtitle">신비로운강물</div>
+                </div>
+              </div>
+              <div class="prompt-list-meta">
+                <span class="prompt-list-meta-block">
+                  <span class="meta-dot"></span><span>005</span>
+                </span>
+                <span class="prompt-list-meta-block">
+                  <span class="meta-dot"></span><span>005</span>
+                </span>
+                <span class="prompt-list-meta-block">
+                  <span class="meta-dot"></span><span>005</span>
+                </span>
+              </div>
+              <button class="prompt-list-save-btn">저장하기</button>
+            </div>
+          
+            <div class="prompt-list-item">
+              <div class="prompt-list-main">
+                <div class="prompt-list-thumb" style="background-image:url('thumb7.png'); background-size:cover; background-position:center;"></div>
+                <div class="prompt-list-text">
+                  <div class="prompt-list-title">생각을 꺼내보기</div>
+                  <div class="prompt-list-subtitle">용감한노트</div>
+                </div>
+              </div>
+              <div class="prompt-list-meta">
+                <span class="prompt-list-meta-block">
+                  <span class="meta-dot"></span><span>005</span>
+                </span>
+                <span class="prompt-list-meta-block">
+                  <span class="meta-dot"></span><span>005</span>
+                </span>
+                <span class="prompt-list-meta-block">
+                  <span class="meta-dot"></span><span>005</span>
+                </span>
+              </div>
+              <button class="prompt-list-save-btn">저장하기</button>
+            </div>
+          </div>
+          
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ===== 캔버스 스케일 =====
+  const BASE_WIDTH = 1440;
+  const BASE_HEIGHT = 900;
+
+  function updateScale() {
+    const sx = window.innerWidth / BASE_WIDTH;
+    const sy = window.innerHeight / BASE_HEIGHT;
+    const scale = Math.min(sx, sy);
+
+    const root = document.getElementById("app-root");
+    root.style.transform = `scale(${scale}) translate(-50%, -50%)`;
+  }
+
+  window.addEventListener("resize", updateScale);
+  updateScale();
+
+  // ===== 저장하기 버튼 토글 =====
+  const saveButtons = document.querySelectorAll(
+    ".prompt-save-btn, .prompt-list-save-btn"
+  );
+
+  saveButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const isSaved = btn.classList.toggle("saved");
+      btn.textContent = isSaved ? "저장됨" : "저장하기";
+    });
+  });
+
+  // ===== 프롬프트 마켓 서브 메뉴 토글 =====
+  const promptNavToggle = document.getElementById("promptNavToggle");
+  const promptSublist = document.getElementById("promptSublist");
+
+  if (promptNavToggle && promptSublist) {
+    promptNavToggle.addEventListener("click", () => {
+      promptSublist.classList.toggle("open");
+    });
+  }
+    // ===== 전체보기 / 랭킹순 탭 전환 =====
+    const viewTabs = document.querySelectorAll('.prompt-tab[data-view]');
+  const cardGrid = document.querySelector('.prompt-card-grid');
+
+  function switchView(mode) {
+    if (!cardGrid) return;
+
+    if (mode === "rank") {
+      // 랭킹순 → 상단 카드 보이기
+      cardGrid.style.display = "grid";
+    } else {
+      // 전체보기 → 상단 카드 숨기기
+      cardGrid.style.display = "none";
+    }
+  }
+
+  viewTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      // active 클래스 갱신
+      viewTabs.forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+
+      // 지정된 뷰 적용
+      const mode = tab.dataset.view;
+      switchView(mode);
+    });
+  });
+
+  // 페이지 로드시 기본 활성 탭 따라 적용
+  const initialActiveTab = document.querySelector('.prompt-tab.active[data-view]');
+  if (initialActiveTab) {
+    switchView(initialActiveTab.dataset.view);
+  }
+
+</script>
+
+</body>
+</html>

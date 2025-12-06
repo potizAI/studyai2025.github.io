@@ -296,7 +296,7 @@
       font-weight: 500;
     }
 
-    /* ===== 모달 ===== */
+    /* ===== 모달 오버레이 ===== */
     .subject-modal-overlay {
       position: fixed;
       inset: 0;
@@ -310,67 +310,75 @@
       display: flex;
     }
 
-    .subject-modal {
-      width: 960px;
-      max-width: calc(100% - 40px);
-      height: 560px;
-      max-height: calc(100% - 40px);
+    /* ===== 모달 컨테이너 ===== */
+    .prompt-modal {
+      width: 900px;
+      height: 600px;
+      max-width: calc(100% - 80px);
       background: #ffffff;
       border-radius: 24px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.3);
       display: flex;
-      overflow: hidden;
+      flex-direction: column;
+      padding: 32px 40px 28px;
       position: relative;
-      font-family: inherit;
+      overflow: hidden;
     }
 
-    .subject-modal-close {
+    .prompt-modal-header {
+      margin-bottom: 18px;
+    }
+
+    .prompt-modal-title {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    .prompt-modal-subtitle {
+      font-size: 14px;
+      color: #9a9a9a;
+    }
+
+    .prompt-modal-close {
       position: absolute;
       right: 24px;
       top: 20px;
-      font-size: 22px;
+      font-size: 20px;
       cursor: pointer;
-      color: #111;
+      color: #444;
+      border: none;
+      background: transparent;
     }
 
-    /* 왼쪽 영역 */
-    .subject-modal-left {
-      width: 260px;
-      background: #ffffff;
-      padding: 32px 28px;
+    .prompt-modal-body {
+      flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      border-right: 6px solid #f0f0f0;
+      gap: 16px;
+      margin-top: 6px;
+      overflow: hidden;
+      position: relative;
     }
 
-    .prompt-nav-title {
+    .prompt-modal-footer {
       display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 16px;
-      font-weight: 600;
-      color: #2563ff;
-    }
-
-    .prompt-nav-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      background: #2563ff;
+      justify-content: flex-end;
+      margin-top: 18px;
     }
 
     .start-chat-btn {
-      width: 100%;
-      padding: 16px 0;
-      border-radius: 14px;
+      min-width: 180px;
+      padding: 12px 26px;
+      border-radius: 16px;
       border: none;
       background: #e5e5e5;
       color: #b5b5b5;
       font-size: 15px;
       font-weight: 600;
       cursor: default;
-      transition: background 0.15s ease, color 0.15s ease;
+      transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
     }
 
     .start-chat-btn.enabled {
@@ -379,39 +387,20 @@
       cursor: pointer;
     }
 
-    /* 오른쪽 영역 */
-    .subject-modal-right {
-      flex: 1;
-      padding: 40px 40px 32px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      background-color: #ffffff;
-      position: relative;
-    }
-
-    .subject-modal-title {
-      font-size: 26px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .subject-modal-subtitle {
-      font-size: 14px;
-      color: #9a9a9a;
-      margin-bottom: 18px;
+    .start-chat-btn.enabled:hover {
+      transform: translateY(-1px);
     }
 
     /* 검색 바 */
     .prompt-search-wrapper {
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
 
     .prompt-search-box {
       display: flex;
       align-items: center;
       width: 100%;
-      border-radius: 14px;
+      border-radius: 16px;
       background: #f5f5f5;
       padding: 12px 16px;
       font-size: 14px;
@@ -437,23 +426,24 @@
       color: #b3b3b3;
     }
 
-    /* 저장한 항목 / 칩 */
+    /* ===== 저장된 항목 + 상세 ===== */
     .prompt-section-label {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
-      margin-bottom: 10px;
-      color: #333;
+      margin-top: 4px;
+      margin-bottom: 6px;
+      color: #555;
     }
 
     .prompt-chip-row {
       display: flex;
-      gap: 8px;
-      margin-bottom: 18px;
       flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
     }
 
     .prompt-chip {
-      border-radius: 14px;
+      border-radius: 999px;
       border: 1px solid #e2e2e2;
       padding: 10px 18px;
       background: #ffffff;
@@ -471,104 +461,105 @@
       border-color: #2563ff;
       background: #f3f6ff;
       box-shadow: 0 0 0 1px rgba(37, 99, 255, 0.15);
+      color: #2563ff;
     }
 
-    /* 프롬프트 설명 영역 */
-    .prompt-detail {
+    .prompt-detail-edit-wrapper {
       flex: 1;
       border-radius: 18px;
       background: #f5f5f5;
-      padding: 20px 26px;
+      padding: 18px 20px;
+    }
+
+    .prompt-detail-textarea {
+      width: 100%;
+      height: 100%;
+      border: none;
+      resize: none;
+      background: transparent;
+      outline: none;
       font-size: 14px;
-      color: #555;
       line-height: 1.7;
-      overflow-y: auto;
+      color: #333;
+      font-family: inherit;
+      white-space: pre-wrap;
     }
 
-    .prompt-detail ul {
-      padding-left: 18px;
-      margin: 0;
+    .prompt-detail-textarea::placeholder {
+      color: #b0b0b0;
     }
 
-    .prompt-detail-placeholder {
-      color: #aaaaaa;
-    }
-
-    /* === 검색 추천 패널 === */
-    .prompt-suggest-panel {
-      display: none;
-      margin-top: 8px;
-      border-radius: 16px;
+    /* ===== 검색 리스트 패널 (Search 클릭 시) ===== */
+    .prompt-list-panel {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 96px; /* 검색바 바로 아래쯤 */
+      margin: 0 auto;
+      width: 100%;
+      max-height: 340px;
+      border-radius: 20px;
       background: #ffffff;
       border: 1px solid #eeeeee;
       box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
-      max-height: 320px;
+      display: none;
+      flex-direction: column;
       overflow: hidden;
-      position: relative;
       z-index: 5;
     }
 
-    .prompt-suggest-panel.is-open {
-      display: block;
-    }
-
-    .suggest-tabs {
+    .prompt-list-panel.is-open {
       display: flex;
-      gap: 8px;
-      padding: 10px 16px 8px;
-      border-bottom: 1px solid #f0f0f0;
     }
 
-    .suggest-tab {
+    .prompt-list-tabs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px 6px;
+      border-bottom: 1px solid #f3f3f3;
+      font-size: 13px;
+    }
+
+    .prompt-list-tab {
       border: none;
       background: transparent;
+      border-radius: 24px;
+      padding: 4px 12px;
       font-size: 12px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      color: #8f93ac;
       cursor: pointer;
+      color: #8f93ac;
     }
 
-    .suggest-tab.active {
-      background: #f5f5f5;
+    .prompt-list-tab.active {
+      background: #f4f4f8;
       color: #333;
       font-weight: 500;
     }
 
-    .suggest-list {
-      list-style: none;
-      margin: 0;
-      padding: 4px 0 8px;
-      max-height: 260px;
+    .prompt-list-scroll {
+      flex: 1;
       overflow-y: auto;
+      padding: 4px 0 8px;
     }
 
-    .suggest-item {
+    .prompt-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 18px;
+      padding: 10px 18px;
       font-size: 14px;
       cursor: pointer;
       color: #333;
     }
 
-    .suggest-item:hover {
-      background: #f7f7f7;
+    .prompt-row:hover {
+      background: #f7f7fb;
     }
 
-    .suggest-item-right {
+    .prompt-row-tag {
       font-size: 12px;
-      color: #a1a7c5;
-    }
-
-    /* 기본 영역(저장한 항목 + 상세) 래퍼 */
-    #promptDefaultArea {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 12px;
-      flex: 1;
+      color: #7f8acb;
     }
   </style>
 </head>
@@ -658,30 +649,18 @@
 
 <!-- 모달 -->
 <div class="subject-modal-overlay" id="subjectModal">
-  <div class="subject-modal">
-    <div class="subject-modal-close" id="closeSubjectModalBtn">×</div>
+  <div class="prompt-modal">
+    <button class="prompt-modal-close" id="closeSubjectModalBtn">×</button>
 
-    <!-- 왼쪽 -->
-    <div class="subject-modal-left">
-      <div class="prompt-nav-title">
-        <span class="prompt-nav-dot"></span>
-        <span>프롬프트</span>
-      </div>
-
-      <button class="start-chat-btn" id="startChatBtn" disabled>
-        대화 시작하기
-      </button>
+    <div class="prompt-modal-header">
+      <h1 class="prompt-modal-title">대화에서 사용될 프롬프트를 설정해보세요</h1>
+      <p class="prompt-modal-subtitle">
+        원하시는 목적의 프롬프트를 검색하거나 선택해주세요
+      </p>
     </div>
 
-    <!-- 오른쪽 -->
-    <div class="subject-modal-right">
-      <div>
-        <h1 class="subject-modal-title">어떤 스타일로 대화하고 싶으신가요?</h1>
-        <p class="subject-modal-subtitle">
-          원하는 프롬프트를 검색하거나 선택해주세요
-        </p>
-      </div>
-
+    <div class="prompt-modal-body">
+      <!-- 검색 영역 -->
       <div class="prompt-search-wrapper">
         <div class="prompt-search-box">
           <span class="prompt-search-icon">🔍</span>
@@ -694,234 +673,238 @@
         </div>
       </div>
 
-      <!-- 검색 추천 패널 -->
-      <div class="prompt-suggest-panel" id="promptSuggestPanel">
-        <div class="suggest-tabs">
-          <button class="suggest-tab active">All</button>
-          <button class="suggest-tab">프롬프트</button>
-          <button class="suggest-tab">저장됨</button>
+      <!-- 저장된 항목 + 상세 -->
+      <div>
+        <div class="prompt-section-label">저장된 항목</div>
+        <div class="prompt-chip-row">
+          <button class="prompt-chip" data-id="writing-1">설명형 글쓰기 프롬프트</button>
+          <button class="prompt-chip" data-id="writing-2">비교·대조 글쓰기 프롬프트</button>
+          <button class="prompt-chip" data-id="writing-3">독자를 고려한 친절한 설명 프롬프트</button>
+          <button class="prompt-chip" data-id="writing-4">발표용 프롬프트</button>
         </div>
-        <ul class="suggest-list">
-          <li class="suggest-item" data-id="writing-1">
-            <span>설명형 글쓰기 프롬프트</span>
-            <span class="suggest-item-right">Prompt</span>
-          </li>
-          <li class="suggest-item" data-id="writing-2">
-            <span>비교·대조 글쓰기 프롬프트</span>
-            <span class="suggest-item-right">Prompt</span>
-          </li>
-          <li class="suggest-item" data-id="writing-3">
-            <span>독자를 고려한 친절한 설명 프롬프트</span>
-            <span class="suggest-item-right">Prompt</span>
-          </li>
-          <li class="suggest-item" data-id="writing-4">
-            <span>발표용 프롬프트</span>
-            <span class="suggest-item-right">Prompt</span>
-          </li>
-        </ul>
       </div>
 
-      <!-- 기본 영역: 저장한 항목 + 상세 -->
-      <div id="promptDefaultArea">
-        <div>
-          <div class="prompt-section-label">저장한 항목</div>
-          <div class="prompt-chip-row">
-            <button class="prompt-chip" data-id="writing-1">설명형 글쓰기 프롬프트</button>
-            <button class="prompt-chip" data-id="writing-2">비교•대조 글쓰기 프롬프트</button>
-            <button class="prompt-chip" data-id="writing-3">독자를 고려한 친절한 설명 프롬프트</button>
-            <button class="prompt-chip" data-id="writing-4">발표용 프롬프트</button>
+      <div class="prompt-detail-edit-wrapper">
+        <textarea
+          id="promptDetailTextarea"
+          class="prompt-detail-textarea"
+          placeholder="• 항목을 선택해주세요"
+        ></textarea>
+      </div>
+
+      <!-- 검색 결과 리스트 패널 -->
+      <div class="prompt-list-panel" id="promptListPanel">
+        <div class="prompt-list-tabs">
+          <button class="prompt-list-tab active">All</button>
+          <button class="prompt-list-tab">프롬프트</button>
+          <button class="prompt-list-tab">저장됨</button>
+        </div>
+        <div class="prompt-list-scroll">
+          <div class="prompt-row" data-id="writing-1">
+            <span>설명형 글쓰기 프롬프트</span>
+            <span class="prompt-row-tag">Prompt</span>
+          </div>
+          <div class="prompt-row" data-id="writing-2">
+            <span>비교·대조 글쓰기 프롬프트</span>
+            <span class="prompt-row-tag">Prompt</span>
+          </div>
+          <div class="prompt-row" data-id="writing-3">
+            <span>독자를 고려한 친절한 설명 프롬프트</span>
+            <span class="prompt-row-tag">Prompt</span>
+          </div>
+          <div class="prompt-row" data-id="writing-4">
+            <span>발표용 프롬프트</span>
+            <span class="prompt-row-tag">Prompt</span>
           </div>
         </div>
-
-        <div class="prompt-detail" id="promptDetail">
-          <p class="prompt-detail-placeholder">
-            프롬프트를 선택하면 상세 설명이 여기에 표시됩니다.
-          </p>
-        </div>
       </div>
+    </div>
+
+    <div class="prompt-modal-footer">
+      <button class="start-chat-btn" id="startChatBtn" disabled>
+        대화 시작하기
+      </button>
     </div>
   </div>
 </div>
 
 <script>
-    // ===== 캔버스 스케일 =====
-    const BASE_WIDTH = 1440;
-    const BASE_HEIGHT = 900;
-  
-    function updateScale() {
-      const sx = window.innerWidth / BASE_WIDTH;
-      const sy = window.innerHeight / BASE_HEIGHT;
-      const scale = Math.min(sx, sy);
-  
-      const root = document.getElementById("app-root");
-      root.style.transform = `scale(${scale}) translate(-50%, -50%)`;
-    }
-  
-    window.addEventListener("resize", updateScale);
-    updateScale();
-  
-    // ===== 모달 열고 닫기 =====
-    const subjectModal = document.getElementById("subjectModal");
-    const openSubjectModalBtnCenter =
-      document.getElementById("openSubjectModalBtnCenter");
-    const closeSubjectModalBtn = document.getElementById("closeSubjectModalBtn");
-    const startChatBtn = document.getElementById("startChatBtn");
-  
-    function openSubjectModal() {
-      selectedPromptId = null;
-      startChatBtn.disabled = true;
-      startChatBtn.classList.remove("enabled");
-      promptChips.forEach((c) => c.classList.remove("is-selected"));
-      promptDetail.innerHTML =
-        '<p class="prompt-detail-placeholder">프롬프트를 선택하면 상세 설명이 여기에 표시됩니다.</p>';
-      exitSearchMode(); // 검색 모드도 초기화
-      subjectModal.classList.add("is-open");
-    }
-  
-    if (openSubjectModalBtnCenter) {
-      openSubjectModalBtnCenter.addEventListener("click", openSubjectModal);
-    }
-  
-    closeSubjectModalBtn.addEventListener("click", () => {
-      subjectModal.classList.remove("is-open");
-    });
-  
-    subjectModal.addEventListener("click", (e) => {
-      // 오버레이(검은 배경) 클릭 시 닫기
-      if (e.target === subjectModal) {
-        subjectModal.classList.remove("is-open");
-      }
-    });
-  
-    // ===== 프롬프트 데이터 & 선택 로직 =====
-    const PROMPT_ITEMS = {
-      "writing-1": {
-        title: "글쓰기용 프롬프트 1",
-        description: [
-          "600~800자 (공백 포함)",
-          "서론–본론–결론 구조로 작성",
-          "~하다 체"
-        ]
-      },
-      "writing-2": {
-        title: "글쓰기용 프롬프트 2",
-        description: [
-          "예시와 근거를 2개 이상 포함",
-          "비교·대조 방식으로 전개",
-          "마지막 문단에 한 문장 요약 추가"
-        ]
-      },
-      "writing-3": {
-        title: "글쓰기용 프롬프트 3",
-        description: [
-          "독자의 입장을 고려한 설명형 글",
-          "전문 용어는 쉽게 풀어 쓰기",
-          "중학생도 이해할 수 있는 난이도"
-        ]
-      },
-      "writing-4": {
-        title: "글쓰기용 프롬프트 4",
-        description: [
-          "도입–전개–정리 흐름이 명확한 발표 구조",
-          "사례·비교·데이터 등 구체적 근거 포함",
-          "발표하듯 자연스럽고 쉽게 이해되는 문장"
+  // ===== 캔버스 스케일 =====
+  const BASE_WIDTH = 1440;
+  const BASE_HEIGHT = 900;
 
-        ]
-      }
-    };
-  
-    const promptChips = document.querySelectorAll(".prompt-chip");
-    const promptDetail = document.getElementById("promptDetail");
-    const promptSearchInput = document.getElementById("promptSearchInput");
-    const promptSuggestPanel = document.getElementById("promptSuggestPanel");
-    const promptDefaultArea = document.getElementById("promptDefaultArea");
-    const modalRight = document.querySelector(".subject-modal-right");
-    const suggestItems = document.querySelectorAll(".suggest-item");
-  
-    let selectedPromptId = null;
-    let searchMode = false;
-  
-    function selectPromptById(id) {
-      selectedPromptId = id;
-  
-      // 칩 선택 상태 업데이트
-      promptChips.forEach((c) => {
-        if (c.dataset.id === id) c.classList.add("is-selected");
-        else c.classList.remove("is-selected");
-      });
-  
-      const item = PROMPT_ITEMS[id];
-      if (item) {
-        const listHtml =
-          "<ul>" + item.description.map((li) => `<li>${li}</li>`).join("") + "</ul>";
-        promptDetail.innerHTML = listHtml;
-      }
-  
-      // 버튼 활성화
-      startChatBtn.disabled = false;
-      startChatBtn.classList.add("enabled");
+  function updateScale() {
+    const sx = window.innerWidth / BASE_WIDTH;
+    const sy = window.innerHeight / BASE_HEIGHT;
+    const scale = Math.min(sx, sy);
+
+    const root = document.getElementById("app-root");
+    root.style.transform = `scale(${scale}) translate(-50%, -50%)`;
+  }
+
+  window.addEventListener("resize", updateScale);
+  updateScale();
+
+  // ===== 모달 열고 닫기 =====
+  const subjectModal = document.getElementById("subjectModal");
+  const openSubjectModalBtnCenter =
+    document.getElementById("openSubjectModalBtnCenter");
+  const closeSubjectModalBtn = document.getElementById("closeSubjectModalBtn");
+  const startChatBtn = document.getElementById("startChatBtn");
+
+  const promptSearchInput = document.getElementById("promptSearchInput");
+  const promptDetailTextarea = document.getElementById("promptDetailTextarea");
+  const promptListPanel = document.getElementById("promptListPanel");
+
+  const promptChips = document.querySelectorAll(".prompt-chip");
+  const promptRows = document.querySelectorAll(".prompt-row");
+
+  const PROMPT_ITEMS = {
+    "writing-1": {
+      label: "설명형 글쓰기 프롬프트",
+      description: [
+        "600~800자 (공백 포함)",
+        "서론–본론–결론 구조로 작성",
+        "~하다 체"
+      ]
+    },
+    "writing-2": {
+      label: "비교·대조 글쓰기 프롬프트",
+      description: [
+        "예시와 근거를 2개 이상 포함",
+        "비교·대조 방식으로 전개",
+        "마지막 문단에 한 문장 요약 추가"
+      ]
+    },
+    "writing-3": {
+      label: "독자를 고려한 친절한 설명 프롬프트",
+      description: [
+        "독자의 입장을 고려한 설명형 글",
+        "전문 용어는 쉽게 풀어 쓰기",
+        "중학생도 이해할 수 있는 난이도"
+      ]
+    },
+    "writing-4": {
+      label: "발표용 프롬프트",
+      description: [
+        "600~800자 (공백 포함)",
+        "도입–전개–정리 흐름이 명확한 발표 구조",
+        "사례·비교·데이터 등 구체적 근거 포함",
+        "발표하듯 자연스럽고 쉽게 이해되는 문장"
+      ]
     }
-  
-    // 칩 클릭
-    promptChips.forEach((chip) => {
-      chip.addEventListener("click", () => {
-        selectPromptById(chip.dataset.id);
-      });
-    });
-  
-    // 추천 리스트 클릭
-    suggestItems.forEach((item) => {
-      item.addEventListener("click", () => {
-        const id = item.dataset.id;
-        selectPromptById(id);
-        exitSearchMode();
-      });
-    });
-  
-    // 검색 모드 on/off
-    function enterSearchMode() {
-      searchMode = true;
-      promptSuggestPanel.classList.add("is-open");
-      promptDefaultArea.style.display = "none";
+  };
+
+  let selectedPromptId = null;
+
+  function resetModalState() {
+    selectedPromptId = null;
+    startChatBtn.disabled = true;
+    startChatBtn.classList.remove("enabled");
+    promptDetailTextarea.value = "";
+    promptSearchInput.value = "";
+    promptChips.forEach(chip => chip.classList.remove("is-selected"));
+    hideListPanel();
+    filterPromptRows("");
+  }
+
+  function openSubjectModal() {
+    resetModalState();
+    subjectModal.classList.add("is-open");
+  }
+
+  if (openSubjectModalBtnCenter) {
+    openSubjectModalBtnCenter.addEventListener("click", openSubjectModal);
+  }
+
+  closeSubjectModalBtn.addEventListener("click", () => {
+    subjectModal.classList.remove("is-open");
+  });
+
+  subjectModal.addEventListener("click", (e) => {
+    if (e.target === subjectModal) {
+      subjectModal.classList.remove("is-open");
     }
-  
-    function exitSearchMode() {
-      searchMode = false;
-      promptSuggestPanel.classList.remove("is-open");
-      promptDefaultArea.style.display = "flex";
+  });
+
+  // ===== 프롬프트 선택 공통 함수 =====
+  function selectPrompt(id) {
+    const item = PROMPT_ITEMS[id];
+    if (!item) return;
+
+    selectedPromptId = id;
+
+    // 칩 하이라이트
+    promptChips.forEach(chip => {
+      if (chip.dataset.id === id) chip.classList.add("is-selected");
+      else chip.classList.remove("is-selected");
+    });
+
+    // 설명을 textarea에 채우기
+    const text = item.description.map(d => "• " + d).join("\n");
+    promptDetailTextarea.value = text;
+
+    // 버튼 활성화
+    startChatBtn.disabled = false;
+    startChatBtn.classList.add("enabled");
+  }
+
+  // 칩 클릭
+  promptChips.forEach(chip => {
+    chip.addEventListener("click", () => {
+      selectPrompt(chip.dataset.id);
+    });
+  });
+
+  // 리스트 행 클릭
+  promptRows.forEach(row => {
+    row.addEventListener("click", () => {
+      selectPrompt(row.dataset.id);
+      hideListPanel();
+    });
+  });
+
+  // ===== 검색 패널 on/off & 필터 =====
+  function showListPanel() {
+    promptListPanel.classList.add("is-open");
+    filterPromptRows(promptSearchInput.value);
+  }
+  function hideListPanel() {
+    promptListPanel.classList.remove("is-open");
+  }
+
+  function filterPromptRows(keyword) {
+    const lower = keyword.trim().toLowerCase();
+    promptRows.forEach(row => {
+      const title = row.firstElementChild.textContent.toLowerCase();
+      row.style.display = (!lower || title.includes(lower)) ? "flex" : "none";
+    });
+  }
+
+  promptSearchInput.addEventListener("focus", showListPanel);
+  promptSearchInput.addEventListener("click", (e) => {
+    e.stopPropagation();
+    showListPanel();
+  });
+
+  promptSearchInput.addEventListener("input", (e) => {
+    filterPromptRows(e.target.value);
+  });
+
+  // 패널 밖 클릭 시 닫기
+  document.addEventListener("click", (e) => {
+    if (!promptListPanel.contains(e.target) && e.target !== promptSearchInput) {
+      hideListPanel();
     }
-  
-    promptSearchInput.addEventListener("focus", enterSearchMode);
-    promptSearchInput.addEventListener("click", (e) => {
-      e.stopPropagation();
-      enterSearchMode();
-    });
-  
-    // 오른쪽 패널에서, 검색 패널/검색창 밖을 클릭하면 검색 모드 종료
-    modalRight.addEventListener("click", (e) => {
-      if (!searchMode) return;
-  
-      const withinSearch =
-        promptSearchInput.contains(e.target) || promptSuggestPanel.contains(e.target);
-  
-      if (!withinSearch) {
-        exitSearchMode();
-      }
-    });
-  
-    // ★ 여기부터 수정된 부분: 대화 시작하기 → new_chat.html 이동
-    startChatBtn.addEventListener("click", () => {
-      if (startChatBtn.disabled || !selectedPromptId) return;
-  
-      // 선택한 프롬프트 id를 쿼리스트링으로 같이 넘기고 싶다면:
-      const params = new URLSearchParams({ promptId: selectedPromptId });
-      window.location.href = `new_chat.html?${params.toString()}`;
-  
-      // 만약 그냥 페이지 이동만 하고 싶으면 위 두 줄 대신:
-      // window.location.href = 'new_chat.html';
-    });
-  </script>
-  
+  });
+
+  // ===== 대화 시작하기 → new_chat.html =====
+  startChatBtn.addEventListener("click", () => {
+    if (startChatBtn.disabled || !selectedPromptId) return;
+    const params = new URLSearchParams({ promptId: selectedPromptId });
+    window.location.href = `new_chat.html?${params.toString()}`;
+  });
+</script>
 
 </body>
 </html>

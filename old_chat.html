@@ -83,10 +83,10 @@
       left: 24px;
       display: flex;
       flex-direction: column;
-      z-index: 20;
+      z-index: 20;  
     }
 
-    .sidebar-main {}
+    .sidebar-main { }
 
     .brand {
       display: flex;
@@ -160,7 +160,7 @@
       color: #fff;
     }
 
-    /* --- 선택한 관점 카드 --- */
+    /* --- 선택한 관점 카드 (로그아웃 바로 위) --- */
     .sidebar-basket {
       margin-top: 160px;
       margin-bottom: 12px;
@@ -169,9 +169,9 @@
       background: #edf3ff;
       border: solid 2px #e8efff;
       transition: border-color 0.15s ease, background 0.15s ease;
-      cursor: pointer;
     }
 
+    /* 드래그 타겟 하이라이트 */
     .sidebar-basket.drag-target {
       border-color: #4b6fff;
       background: #e2e7ff;
@@ -192,17 +192,16 @@
       border: 1px dashed #bac4ff;
       margin-top: 8px;
       background: transparent;
-      padding: 0 8px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
     }
 
     .basket-slot.filled {
       border-style: solid;
       border-color: #e0e3ff;
       background: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 10px;
     }
 
     .basket-dot {
@@ -397,7 +396,7 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-      padding: 10px 14px 12px;
+      padding: 10px 14px;
       background: #ffffff;
       border-radius: 18px;
     }
@@ -433,43 +432,30 @@
       color: #fff;
     }
 
-    /* ===== 입력창 아래 도구 버튼들 ===== */
     .chat-tools-row {
       display: flex;
       gap: 10px;
       margin-top: 2px;
-      flex-wrap: wrap;
     }
 
     .chat-tool-btn {
-      border: 1px solid #dadef5;
-      background: #f8f8ff;
+      border: none;
+      background: transparent;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 18px;
+      padding: 4px 8px;
       font-size: 12px;
       color: #444;
       cursor: pointer;
+    }
+
+    .chat-tool-dot {
+      width: 24px;
+      height: 24px;
       border-radius: 999px;
-      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease,
-        transform 0.08s ease;
-    }
-
-    .chat-tool-btn:hover {
-      background: #eff1ff;
-    }
-
-    .chat-tool-btn:active,
-    .chat-tool-btn.is-selected {
-      background: #4b6fff;
-      color: #ffffff;
-      border-color: #4b6fff;
-      transform: translateY(1px);
-    }
-
-    .chat-tool-emoji {
-      font-size: 15px;
+      background: #e0e0e0;
+      flex-shrink: 0;
     }
 
     /* 오른쪽 패널 */
@@ -616,13 +602,11 @@
       gap: 8px;
       border: solid 2px #f5f5f5;
       font-size: 13px;
-      cursor: pointer;
-      transition: background 0.12s ease, border-color 0.12s ease, opacity 0.12s ease;
+      cursor: grab;            /* 드래그 느낌 */
     }
 
-    .prompt-vertical-item:hover {
-      background: #f7f7ff;
-      border-color: #e5e7ff;
+    .prompt-vertical-item.dragging {
+      opacity: 0.6;
     }
 
     .prompt-vertical-thumb {
@@ -663,28 +647,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: default; /* 아이콘 느낌만, 클릭은 카드에서 처리 */
+      cursor: pointer;
       font-size: 16px;
       color: #4b5563;
-      pointer-events: none;
     }
 
-    .prompt-add-btn.is-selected {
+    .prompt-add-btn:disabled {
+      cursor: default;
       background: #111827;
       color: #ffffff;
     }
-    .basket-thumb {
-      width: 28px;
-      height: 28px;
-      border-radius: 999px;
-      background-size: cover;
-      background-position: center;
-      background-color: #d1d5db; /* 혹시 이미지 없을 때 배경 */
-      flex-shrink: 0;
-    }
-
-    /* (원래 있던 .basket-dot은 안써도 되지만 놔둬도 상관 없음) */
-
   </style>
 </head>
 <body>
@@ -708,23 +680,23 @@
             </li>
           </a>
           <a href="project_folder.html" class="nav-link">
-            <li class="nav-item active">
-              <div class="nav-icon">📂</div>
-              <span>프로젝트 관리</span>
-            </li>
+          <li class="nav-item active">
+            <div class="nav-icon">📂</div>
+            <span>프로젝트 관리</span>
+          </li>
           </a>
-          <a href="market1.html" class="nav-link">
-            <li class="nav-item">
-              <div class="nav-icon">🛒</div>
-              <span>프롬프트 마켓</span>
-            </li>
-          </a>
-          <a href="fast_search.html" class="nav-link">
-            <li class="nav-item">
-              <div class="nav-icon">💬</div>
-              <span>빠른 대화</span>
-            </li>
-          </a>
+          <a href="prompt_list.html" class="nav-link">
+          <li class="nav-item">
+            <div class="nav-icon">🛒</div>
+            <span>프롬프트 마켓</span>
+          </li>
+        </a>
+        <a href="fast_search.html" class="nav-link">
+          <li class="nav-item">
+            <div class="nav-icon">💬</div>
+            <span>빠른 대화</span>
+          </li>
+        </a>
           <li class="nav-item">
             <div class="nav-icon">⚙️</div>
             <span>개인 설정</span>
@@ -757,7 +729,7 @@
       <section class="chat-layout">
         <header class="chat-header">
           <div>
-            <div class="chat-title">사회_AI 추천 알고리즘이 우리의 선택을 더 ‘똑똑하게’ 만들까, 더 ‘좁게’ 만들까?</div>
+            <div class="chat-title">사회_대화1</div>
             <div class="chat-subtitle"></div>
             <div class="chip-row" id="chipRow"></div>
           </div>
@@ -770,7 +742,7 @@
               <img src="photo.png" alt="AI Profile" />
             </div>
             <div class="chat-bubble">안녕하세요! 😊  
-오늘은 어떤 내용을 논의해볼까요?</div>
+방금 선택하신 내용 기준으로 학습 폴더 구성을 도와드릴게요.</div>
           </div>
         </div>
 
@@ -807,22 +779,23 @@
               <span>출처 목록</span>
             </button>
           </div>
+          
         </form>
       </section>
 
-      <!-- 오른쪽 패널 : 관점 설정 -->
+      <!-- 오른쪽 패널 : 공유 프롬프트 마켓 -->
       <aside class="prompt-side-panel" id="promptPanel">
         <div class="prompt-panel-header">
           <div class="prompt-panel-title">관점 설정</div>
-          <button class="prompt-panel-close" id="closePromptPanelBtn">×</button>
+          <button class="prompt-panel-close" id="closePromptPanelBtn">X</button>
         </div>
 
         <div class="prompt-panel-tabs">
           <div class="prompt-tabs">
             <button class="prompt-tab">관점 프롬프트</button>
             <button class="prompt-tab active">
-              저장된 관점
-              <span class="prompt-tab-badge">7</span>
+              장바구니
+              <span class="prompt-tab-badge">12</span>
             </button>
           </div>
         </div>
@@ -834,64 +807,64 @@
 
         <div class="prompt-list-vertical">
           <div class="prompt-vertical-item">
-            <div class="prompt-vertical-thumb" style="background-image:url('thumb8.png'); background-size:cover; background-position:center;"></div>
+            <div class="prompt-vertical-thumb"></div>
             <div class="prompt-vertical-text">
               <div class="prompt-vertical-title">사회학자의 관점</div>
-              <div class="prompt-vertical-subtitle">상쾌한키위</div>
+              <div class="prompt-vertical-subtitle">관점 프롬프트</div>
             </div>
             <button class="prompt-add-btn">+</button>
           </div>
 
           <div class="prompt-vertical-item">
-            <div class="prompt-vertical-thumb" style="background-image:url('thumb9.png'); background-size:cover; background-position:center;"></div>
-            <div class="prompt-vertical-text">
-              <div class="prompt-vertical-title">철학자 니체의 세계관</div>
-              <div class="prompt-vertical-subtitle">신나는양파</div>
-            </div>
-            <button class="prompt-add-btn">+</button>
-          </div>
-
-          <div class="prompt-vertical-item">
-            <div class="prompt-vertical-thumb" style="background-image:url('thumb10.png'); background-size:cover; background-position:center;"></div>
-            <div class="prompt-vertical-text">
-              <div class="prompt-vertical-title">청소년 소비자 관점</div>
-              <div class="prompt-vertical-subtitle">매운브로콜리</div>
-            </div>
-            <button class="prompt-add-btn">+</button>
-          </div>
-
-          <div class="prompt-vertical-item">
-            <div class="prompt-vertical-thumb" style="background-image:url('thumb11.png'); background-size:cover; background-position:center;"></div>
-            <div class="prompt-vertical-text">
-              <div class="prompt-vertical-title">환경윤리 관점</div>
-              <div class="prompt-vertical-subtitle">용감한 키보드</div>
-            </div>
-            <button class="prompt-add-btn">+</button>
-          </div>
-
-          <div class="prompt-vertical-item">
-            <div class="prompt-vertical-thumb" style="background-image:url('thumb12.png'); background-size:cover; background-position:center;"></div>
-            <div class="prompt-vertical-text">
-              <div class="prompt-vertical-title">경제학자의 분석틀</div>
-              <div class="prompt-vertical-subtitle">활발한 곰</div>
-            </div>
-            <button class="prompt-add-btn">+</button>
-          </div>
-
-          <div class="prompt-vertical-item">
-            <div class="prompt-vertical-thumb" style="background-image:url('thumb13.png'); background-size:cover; background-position:center;"></div>
+            <div class="prompt-vertical-thumb"></div>
             <div class="prompt-vertical-text">
               <div class="prompt-vertical-title">데이터 분석가</div>
-              <div class="prompt-vertical-subtitle">상쾌한키위</div>
+              <div class="prompt-vertical-subtitle">관점 프롬프트</div>
             </div>
             <button class="prompt-add-btn">+</button>
           </div>
 
           <div class="prompt-vertical-item">
-            <div class="prompt-vertical-thumb" style="background-image:url('thumb14.png'); background-size:cover; background-position:center;"></div>
+            <div class="prompt-vertical-thumb"></div>
             <div class="prompt-vertical-text">
               <div class="prompt-vertical-title">기업 경영진의 관점</div>
-              <div class="prompt-vertical-subtitle">매운브로콜리</div>
+              <div class="prompt-vertical-subtitle">관점 프롬프트</div>
+            </div>
+            <button class="prompt-add-btn">+</button>
+          </div>
+
+          <div class="prompt-vertical-item">
+            <div class="prompt-vertical-thumb"></div>
+            <div class="prompt-vertical-text">
+              <div class="prompt-vertical-title">비판적 미디어 관점</div>
+              <div class="prompt-vertical-subtitle">관점 프롬프트</div>
+            </div>
+            <button class="prompt-add-btn">+</button>
+          </div>
+
+          <div class="prompt-vertical-item">
+            <div class="prompt-vertical-thumb"></div>
+            <div class="prompt-vertical-text">
+              <div class="prompt-vertical-title">철학자 니체의 세계관</div>
+              <div class="prompt-vertical-subtitle">관점 프롬프트</div>
+            </div>
+            <button class="prompt-add-btn">+</button>
+          </div>
+
+          <div class="prompt-vertical-item">
+            <div class="prompt-vertical-thumb"></div>
+            <div class="prompt-vertical-text">
+              <div class="prompt-vertical-title">청소년 소비자 관점</div>
+              <div class="prompt-vertical-subtitle">관점 프롬프트</div>
+            </div>
+            <button class="prompt-add-btn">+</button>
+          </div>
+
+          <div class="prompt-vertical-item">
+            <div class="prompt-vertical-thumb"></div>
+            <div class="prompt-vertical-text">
+              <div class="prompt-vertical-title">환경윤리 관점</div>
+              <div class="prompt-vertical-subtitle">관점 프롬프트</div>
             </div>
             <button class="prompt-add-btn">+</button>
           </div>
@@ -902,261 +875,321 @@
 </div>
 
 <script>
-  // 캔버스 스케일
-  const BASE_WIDTH = 1440;
-  const BASE_HEIGHT = 900;
-
-  function updateScale() {
-    const sx = window.innerWidth / BASE_WIDTH;
-    const sy = window.innerHeight / BASE_HEIGHT;
-    const scale = Math.min(sx, sy);
-    const root = document.getElementById("app-root");
-    root.style.transform = `scale(${scale}) translate(-50%, -50%)`;
-  }
-  window.addEventListener("resize", updateScale);
-  updateScale();
-
-  // 칩 세팅
-  const subject = "사회";
-  const purpose = "글쓰기";
-  const promptText = "토론을 위한 프롬프트";
-  const chipRow = document.getElementById("chipRow");
-
-  function addChip(label, value, closable = false) {
-    if (!value) return;
-    const chip = document.createElement("div");
-    chip.className = "chip";
-
-    const labelSpan = document.createElement("span");
-    labelSpan.className = "chip-label";
-    labelSpan.textContent = label;
-
-    const valueSpan = document.createElement("span");
-    valueSpan.textContent = " " + value;
-
-    chip.appendChild(labelSpan);
-    chip.appendChild(valueSpan);
-
-    if (closable) {
-      const closeBtn = document.createElement("button");
-      closeBtn.type = "button";
-      closeBtn.className = "chip-close";
-      closeBtn.textContent = "×";
-
-      closeBtn.addEventListener("click", () => {
-        labelSpan.remove();
-        closeBtn.remove();
-        chip.classList.add("chip-add");
-        valueSpan.textContent = "프롬프트 추가하기";
-        chip.addEventListener(
-          "click",
-          () => {
-            console.log("프롬프트 추가하기 클릭");
-          },
-          { once: true }
+    // 캔버스 스케일
+    const BASE_WIDTH = 1440;
+    const BASE_HEIGHT = 900;
+  
+    function updateScale() {
+      const sx = window.innerWidth / BASE_WIDTH;
+      const sy = window.innerHeight / BASE_HEIGHT;
+      const scale = Math.min(sx, sy);
+      const root = document.getElementById("app-root");
+      root.style.transform = `scale(${scale}) translate(-50%, -50%)`;
+    }
+    window.addEventListener("resize", updateScale);
+    updateScale();
+  
+    // 칩 세팅
+    const subject = "한국지리";
+    const purpose = "세부특기사항";
+    const promptText = "설명형 글쓰기";
+    const chipRow = document.getElementById("chipRow");
+  
+    function addChip(label, value, closable = false) {
+      if (!value) return;
+      const chip = document.createElement("div");
+      chip.className = "chip";
+  
+      const labelSpan = document.createElement("span");
+      labelSpan.className = "chip-label";
+      labelSpan.textContent = label;
+  
+      const valueSpan = document.createElement("span");
+      valueSpan.textContent = " " + value;
+  
+      chip.appendChild(labelSpan);
+      chip.appendChild(valueSpan);
+  
+      if (closable) {
+        const closeBtn = document.createElement("button");
+        closeBtn.type = "button";
+        closeBtn.className = "chip-close";
+        closeBtn.textContent = "×";
+  
+        closeBtn.addEventListener("click", () => {
+          labelSpan.remove();
+          closeBtn.remove();
+          chip.classList.add("chip-add");
+          valueSpan.textContent = "프롬프트 추가하기";
+          chip.addEventListener(
+            "click",
+            () => {
+              console.log("프롬프트 추가하기 클릭");
+            },
+            { once: true }
+          );
+        });
+  
+        chip.appendChild(closeBtn);
+      }
+  
+      chipRow.appendChild(chip);
+    }
+  
+    addChip("과목", subject);
+    addChip("목적", purpose);
+    addChip("프롬프트", promptText, true);
+  
+    // 더미 채팅
+    const chatForm = document.getElementById("chatForm");
+    const chatInput = document.getElementById("chatInput");
+    const chatWindow = document.getElementById("chatWindow");
+    const initialMessage = document.getElementById("initialMessage");
+    let firstInteractionDone = false;
+  
+    function appendMessage(text, role = "user") {
+      const msg = document.createElement("div");
+      msg.className = `chat-message ${role}`;
+  
+      if (role === "bot") {
+        const profile = document.createElement("div");
+        profile.className = "bot-profile";
+        const img = document.createElement("img");
+        img.src = "photo.png";
+        img.alt = "AI Profile";
+        profile.appendChild(img);
+        msg.appendChild(profile);
+      }
+  
+      const bubble = document.createElement("div");
+      bubble.className = "chat-bubble";
+      if (role === "bot") {
+        bubble.style.background = "transparent";
+        bubble.style.padding = "0";
+        bubble.style.borderRadius = "0";
+      }
+      bubble.textContent = text;
+      msg.appendChild(bubble);
+      chatWindow.appendChild(msg);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+  
+    chatForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const value = chatInput.value.trim();
+      if (!value) return;
+  
+      if (!firstInteractionDone && initialMessage) {
+        initialMessage.remove();
+        firstInteractionDone = true;
+      }
+  
+      appendMessage(value, "user");
+      chatInput.value = "";
+  
+      setTimeout(() => {
+        appendMessage(
+  `[설계안] 다음은 해당 주제를 논술형 글로 전개하기 위한 기본 구조 설계안입니다.
+  
+  서론
+  AI 추천 알고리즘이 다양한 플랫폼에서 우리의 선택 과정에 깊이 개입하고 있다는 점을 제시합니다.
+  ‘선택을 돕는 도구인가, 선택을 제한하는 틀인가’라는 핵심 문제를 던져 글의 논점을 제시합니다.
+  본론 1 – 선택을 더 똑똑하게 만든다는 관점
+  방대한 데이터 분석을 기반으로 개인 맞춤 추천 제공
+  정보 탐색 비용 감소(시간·노력 절약)
+  과거 선택 패턴을 학습하여 더 정교한 판단 보조
+  예: 음악 추천 알고리즘이 취향 기반으로 새로운 아티스트를 자동 발굴해주는 사례
+  본론 2 – 선택을 더 좁게 만든다는 관점
+  알고리즘이 보여주는 정보에 지나치게 의존할 가능성
+  필터 버블 강화 → 다양한 관점과 정보 접근이 어려워짐
+  특정 플랫폼이 노출 우선순위를 통제함으로써 선택권이 ‘보이지 않게’ 제한될 위험
+  예: SNS 알고리즘이 비슷한 유형의 콘텐츠만 반복적으로 노출하는 문제
+  결론
+  두 관점의 장단점을 요약하고,
+  알고리즘을 이해하고 능동적으로 활용하는 능력이 필요하다는 점을 강조하며 글을 마무리합니다.
+  
+  필요하다면 초안 작성, 사례 확장, 대안 논지 제시 등도 이어서 지원할 수 있습니다`,
+          "bot"
         );
-      });
-
-      chip.appendChild(closeBtn);
-    }
-
-    chipRow.appendChild(chip);
-  }
-
-  addChip("과목", subject);
-  addChip("목적", purpose);
-  addChip("프롬프트", promptText, true);
-
-  // 더미 채팅
-  const chatForm = document.getElementById("chatForm");
-  const chatInput = document.getElementById("chatInput");
-  const chatWindow = document.getElementById("chatWindow");
-  const initialMessage = document.getElementById("initialMessage");
-  let firstInteractionDone = false;
-
-  function appendMessage(text, role = "user") {
-    const msg = document.createElement("div");
-    msg.className = `chat-message ${role}`;
-
-    if (role === "bot") {
-      const profile = document.createElement("div");
-      profile.className = "bot-profile";
-      const img = document.createElement("img");
-      img.src = "photo.png";
-      img.alt = "AI Profile";
-      profile.appendChild(img);
-      msg.appendChild(profile);
-    }
-
-    const bubble = document.createElement("div");
-    bubble.className = "chat-bubble";
-    if (role === "bot") {
-      bubble.style.background = "transparent";
-      bubble.style.padding = "0";
-      bubble.style.borderRadius = "0";
-    }
-    bubble.textContent = text;
-    msg.appendChild(bubble);
-    chatWindow.appendChild(msg);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-  }
-
-  chatForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const value = chatInput.value.trim();
-    if (!value) return;
-
-    if (!firstInteractionDone && initialMessage) {
-      initialMessage.remove();
-      firstInteractionDone = true;
-    }
-
-    appendMessage(value, "user");
-    chatInput.value = "";
-
-    setTimeout(() => {
-      appendMessage(
-`[설계안] 다음은 해당 주제를 논술형 글로 전개하기 위한 기본 구조 설계안입니다.
-
-서론
-AI 추천 알고리즘이 다양한 플랫폼에서 우리의 선택 과정에 깊이 개입하고 있다는 점을 제시합니다.
-‘선택을 돕는 도구인가, 선택을 제한하는 틀인가’라는 핵심 문제를 던져 글의 논점을 제시합니다.
-본론 1 – 선택을 더 똑똑하게 만든다는 관점
-방대한 데이터 분석을 기반으로 개인 맞춤 추천 제공
-정보 탐색 비용 감소(시간·노력 절약)
-과거 선택 패턴을 학습하여 더 정교한 판단 보조
-예: 음악 추천 알고리즘이 취향 기반으로 새로운 아티스트를 자동 발굴해주는 사례
-본론 2 – 선택을 더 좁게 만든다는 관점
-알고리즘이 보여주는 정보에 지나치게 의존할 가능성
-필터 버블 강화 → 다양한 관점과 정보 접근이 어려워짐
-특정 플랫폼이 노출 우선순위를 통제함으로써 선택권이 ‘보이지 않게’ 제한될 위험
-예: SNS 알고리즘이 비슷한 유형의 콘텐츠만 반복적으로 노출하는 문제
-결론
-두 관점의 장단점을 요약하고,
-알고리즘을 이해하고 능동적으로 활용하는 능력이 필요하다는 점을 강조하며 글을 마무리합니다.
-
-필요하다면 초안 작성, 사례 확장, 대안 논지 제시 등도 이어서 지원할 수 있습니다`,
-        "bot"
-      );
-    }, 500);
-  });
-
-  // 오른쪽 패널 열기 / 닫기 + 도구버튼 상태
-  const promptPanel = document.getElementById("promptPanel");
-  const openPromptPanelBtn = document.getElementById("openPromptPanelBtn");
-  const closePromptPanelBtn = document.getElementById("closePromptPanelBtn");
-  const toolButtons = document.querySelectorAll(".chat-tool-btn");
-  const perspectiveBtn = openPromptPanelBtn;
-
-  function dimOtherToolButtons() {
-    toolButtons.forEach((btn) => {
-      if (btn !== perspectiveBtn) {
-        btn.style.opacity = "0.3";
-        btn.style.pointerEvents = "none";
-      }
+      }, 500);
     });
-  }
-
-  function restoreToolButtons() {
-    toolButtons.forEach((btn) => {
-      btn.style.opacity = "1";
-      btn.style.pointerEvents = "auto";
-      btn.classList.remove("is-selected");
-    });
-  }
-
-  function openPromptPanel() {
-    promptPanel.classList.add("is-open");
-    dimOtherToolButtons();
-    perspectiveBtn.classList.add("is-selected");
-  }
-
-  function closePromptPanel() {
-    promptPanel.classList.remove("is-open");
-    restoreToolButtons();
-  }
-
-  openPromptPanelBtn.addEventListener("click", openPromptPanel);
-  closePromptPanelBtn.addEventListener("click", closePromptPanel);
-
-  // ===== 장바구니 / 선택한 관점 로직 =====
-  const basketSlots = document.querySelectorAll(".basket-slot");
-  const usedTitles = new Set();
-  const sidebarBasket = document.getElementById("sidebarBasket");
-
-  // 슬롯 채우기: 제목 + 썸네일 background-image
-  function fillSlot(slot, title, thumbBg) {
-    if (!slot || slot.classList.contains("filled")) return;
-    if (usedTitles.has(title)) return;
-
-    usedTitles.add(title);
-    slot.classList.add("filled");
-    slot.innerHTML = "";
-
-    // 썸네일 이미지
-    const thumb = document.createElement("div");
-    thumb.className = "basket-thumb";
-    if (thumbBg) {
-      thumb.style.backgroundImage = thumbBg; // "url(...)" 그대로 사용
+  
+    // 오른쪽 패널 열기 / 닫기
+    const promptPanel = document.getElementById("promptPanel");
+    const openPromptPanelBtn = document.getElementById("openPromptPanelBtn");
+    const closePromptPanelBtn = document.getElementById("closePromptPanelBtn");
+  
+    function openPromptPanel() {
+      promptPanel.classList.add("is-open");
     }
-
-    const text = document.createElement("span");
-    text.textContent = title;
-
-    slot.appendChild(thumb);
-    slot.appendChild(text);
-  }
-
-  // 첫 번째 빈 슬롯 채우기, 성공 여부 반환
-  function addToSidebarBasket(title, thumbBg) {
-    if (usedTitles.has(title)) return false;
-    for (const slot of basketSlots) {
-      if (!slot.classList.contains("filled")) {
-        fillSlot(slot, title, thumbBg);
-        return true;
+    function closePromptPanel() {
+      promptPanel.classList.remove("is-open");
+    }
+    openPromptPanelBtn.addEventListener("click", openPromptPanel);
+    closePromptPanelBtn.addEventListener("click", closePromptPanel);
+  
+    // ===== 장바구니 항목을 사이드바 슬롯에 채우기 (클릭 + 드래그 공통) =====
+    const basketSlots = document.querySelectorAll(".basket-slot");
+    const usedTitles = new Set();
+    const sidebarBasket = document.getElementById("sidebarBasket");
+  
+    function fillSlot(slot, title) {
+      if (!slot || slot.classList.contains("filled")) return;
+      if (usedTitles.has(title)) return;
+  
+      usedTitles.add(title);
+      slot.classList.add("filled");
+      slot.innerHTML = "";
+  
+      const dot = document.createElement("span");
+      dot.className = "basket-dot";
+  
+      const text = document.createElement("span");
+      text.textContent = title;
+  
+      slot.appendChild(dot);
+      slot.appendChild(text);
+    }
+  
+    // 첫 번째 빈 슬롯 채우기 ( + 버튼용 )
+    function addToSidebarBasket(title) {
+      if (usedTitles.has(title)) return;
+  
+      for (const slot of basketSlots) {
+        if (!slot.classList.contains("filled")) {
+          fillSlot(slot, title);
+          break;
+        }
       }
     }
-    return false;
-  }
-
-  // 사이드바 "선택한 관점" 클릭 시에도 패널 오픈
-  sidebarBasket.addEventListener("click", () => {
-    openPromptPanel();
-  });
-
-  basketSlots.forEach((slot) => {
-    slot.addEventListener("click", () => {
-      if (slot.classList.contains("filled")) {
-        openPromptPanel();
-      }
-    });
-  });
-
-  // ===== 관점 카드 클릭 → 선택한 관점으로 이동 & 카드 흐리게 =====
-  document.querySelectorAll(".prompt-vertical-item").forEach((item) => {
-    const titleEl = item.querySelector(".prompt-vertical-title");
-    const btn = item.querySelector(".prompt-add-btn");
-    const thumbEl = item.querySelector(".prompt-vertical-thumb");
-
-    if (!titleEl) return;
-
-    item.addEventListener("click", () => {
-      const title = titleEl.textContent.trim();
-      const thumbBg = thumbEl ? thumbEl.style.backgroundImage : "";
-
-      const added = addToSidebarBasket(title, thumbBg);
-      if (!added) return;
-
-      // 카드 상태 업데이트 (체크 + 흐리게)
-      if (btn) {
+  
+    // + 버튼 클릭 시
+    document.querySelectorAll(".prompt-vertical-item").forEach((item) => {
+      const btn = item.querySelector(".prompt-add-btn");
+      const titleEl = item.querySelector(".prompt-vertical-title");
+  
+      if (!btn || !titleEl) return;
+  
+      btn.addEventListener("click", () => {
+        const title = titleEl.textContent.trim();
+        addToSidebarBasket(title);
         btn.textContent = "✓";
-        btn.classList.add("is-selected");
-      }
-      item.style.opacity = "0.3";
+        btn.disabled = true;
+      });
     });
-  });
-</script>
+  
+    // ===== 드래그 앤 드롭 로직 =====
+    let draggedItem = null;
+  
+    // 카드들을 드래그 가능하게
+    document.querySelectorAll(".prompt-vertical-item").forEach((item) => {
+      const titleEl = item.querySelector(".prompt-vertical-title");
+      if (!titleEl) return;
+  
+      item.setAttribute("draggable", "true");
+  
+      item.addEventListener("dragstart", (e) => {
+        draggedItem = item;
+        item.classList.add("dragging");
+        const title = titleEl.textContent.trim();
+        e.dataTransfer.effectAllowed = "copy";
+        e.dataTransfer.setData("text/plain", title);
+        sidebarBasket.classList.add("drag-target");
+      });
+  
+      item.addEventListener("dragend", () => {
+        draggedItem = null;
+        item.classList.remove("dragging");
+        sidebarBasket.classList.remove("drag-target");
+      });
+    });
+  
+    // 드랍 타겟: sidebarBasket 전체
+    sidebarBasket.addEventListener("dragover", (e) => {
+      e.preventDefault(); // drop 허용
+      e.dataTransfer.dropEffect = "copy";
+    });
+  
+    sidebarBasket.addEventListener("drop", (e) => {
+      e.preventDefault();
+      sidebarBasket.classList.remove("drag-target");
+  
+      const title = e.dataTransfer.getData("text/plain");
+      if (!title) return;
+  
+      // 마우스 위치와 겹치는 슬롯 찾기
+      const x = e.clientX;
+      const y = e.clientY;
+      let targetSlot = null;
+  
+      basketSlots.forEach((slot) => {
+        const rect = slot.getBoundingClientRect();
+        if (
+          x >= rect.left &&
+          x <= rect.right &&
+          y >= rect.top &&
+          y <= rect.bottom
+        ) {
+          targetSlot = slot;
+        }
+      });
+  
+      // 겹치는 슬롯이 없으면 첫 번째 빈 슬롯 사용
+      if (!targetSlot) {
+        basketSlots.forEach((slot) => {
+          if (!targetSlot && !slot.classList.contains("filled")) {
+            targetSlot = slot;
+          }
+        });
+      }
+  
+      if (!targetSlot) return;
+  
+      fillSlot(targetSlot, title);
+  
+      // 드래그해 온 카드의 버튼도 체크 처리
+      if (draggedItem) {
+        const btn = draggedItem.querySelector(".prompt-add-btn");
+        if (btn && !btn.disabled) {
+          btn.textContent = "✓";
+          btn.disabled = true;
+        }
+      }
+    });
+    const toolButtons = document.querySelectorAll(".chat-tool-btn");
+const perspectiveBtn = document.getElementById("openPromptPanelBtn");
 
+// 패널 열릴 때 → 나머지 버튼 흐리게
+function dimOtherToolButtons() {
+  toolButtons.forEach((btn) => {
+    if (btn !== perspectiveBtn) {
+      btn.style.opacity = "0.3";
+      btn.style.pointerEvents = "none";  // 클릭도 막기 원하면 유지, 아니면 삭제
+    }
+  });
+}
+
+// 패널 닫힐 때 → 원래대로
+function restoreToolButtons() {
+  toolButtons.forEach((btn) => {
+    btn.style.opacity = "1";
+    btn.style.pointerEvents = "auto";
+  });
+}
+
+function openPromptPanel() {
+  promptPanel.classList.add("is-open");
+  dimOtherToolButtons();   // ← 이거 추가됨!
+}
+
+function closePromptPanel() {
+  promptPanel.classList.remove("is-open");
+  restoreToolButtons();   // ← 이거 추가됨!
+}
+
+  </script>
+  
+  
 
 </body>
 </html>

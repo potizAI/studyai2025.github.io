@@ -352,7 +352,7 @@
     }
 
     .chat-bubble {
-      max-width: 70%;
+      max-width: 90%;
       padding: 12px 16px;
       border-radius: 18px;
       font-size: 14px;
@@ -431,26 +431,46 @@
       color: #fff;
     }
 
+    /* ✅ 여기부터 수정된 부분: 툴 버튼 스타일 */
     .chat-tools-row {
       display: flex;
       gap: 10px;
       margin-top: 2px;
+      flex-wrap: wrap;
     }
 
     .chat-tool-btn {
-      border: none;
-      background: transparent;
+      border: 1px solid #dadef5;
+      background: #f8f8ff;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 4px 8px;
+      padding: 6px 18px;
       font-size: 12px;
       color: #444;
       cursor: pointer;
+      border-radius: 999px;
+      transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.08s ease;
+    }
+
+    .chat-tool-btn:hover {
+      background: #eff1ff;
+    }
+
+    .chat-tool-btn:active,
+    .chat-tool-btn.is-selected {
+      background: #4b6fff;
+      color: #ffffff;
+      border-color: #4b6fff;
+      transform: translateY(1px);
     }
 
     .chat-tool-emoji {
-      font-size: 16px;
+      font-size: 15px;
       flex-shrink: 0;
     }
 
@@ -766,22 +786,20 @@
     .save-btn:not(:disabled) {
       background: var(--primary);
       color: #ffffff;
-      /* box-shadow: 0 10px 24px rgba(75, 111, 255, 0.3); */
     }
 
     .save-btn:not(:disabled):hover {
       box-shadow: 0 14px 32px rgba(75, 111, 255, 0.32);
     }
 
-     
-    
-        /* ===== 실시간 글쓰기 : 조언 카드 ===== */
-        .write-advice-card {
+    /* ===== 실시간 글쓰기 : 조언 카드 ===== */
+    .write-advice-card {
       margin-top: 18px;
       padding: 16px 18px 14px;
       border-radius: 22px;
       background: #f6f7ff;
       box-shadow: 0 0 0 rgba(0,0,0,0.02);
+      display: none;
     }
 
     .write-advice-title {
@@ -835,15 +853,16 @@
       color: #ffffff;
     }
 
-    /* ===== 실시간 글쓰기 : 진척도 바 ===== */
+    /* ===== 실시간 글쓰기 : 진척도 바 (교체된 버전) ===== */
     .write-progress-card {
       margin-top: 14px;
       margin-bottom: 10px;
-      padding: 12px 18px;
+      padding: 16px 20px 14px;
       border-radius: 18px;
       border: 1px solid #f0f1f6;
       background: #fbfbff;
       box-shadow: 0 0 0 rgba(0,0,0,0.02);
+      cursor: pointer; /* 카드 전체 클릭 가능 */
     }
 
     .write-progress-bar-wrapper {
@@ -853,7 +872,7 @@
       border-radius: 999px;
       background: #e5e6eb;
       overflow: hidden;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
     .write-progress-bar-fill {
@@ -864,152 +883,188 @@
       transition: width 0.2s ease;
     }
 
-    /* .write-progress-marker {
+    /* ▼ 마커는 일단 안 보이게만 숨겨둘게 */
+    .write-progress-marker {
       position: absolute;
-      top: -12px;
-      transform: translateX(-50%);
-      font-size: 16px;
-    } */
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 10px;
+      color: #6b7280;
+      display: none;
+    }
+
+    /* 아래 라벨 + 상세보기 버튼 줄 */
+    .write-progress-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
     .write-progress-label {
-      text-align: right;
-      font-size: 12px;
+      font-size: 14px;
       color: #111827;
     }
 
+    /* 상세보기 버튼 */
+    .write-progress-detail-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 13px;
+      color: #111827;
+    }
+
+    .write-progress-detail-text {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .write-progress-detail-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      border: 1.5px solid #111827;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+    }
 
     /* ===== 나의 기여도 모달 ===== */
-.contribution-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.55);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
+    .contribution-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
 
-.contribution-modal.is-open {
-  display: flex;
-}
+    .contribution-modal.is-open {
+      display: flex;
+    }
 
-.contribution-modal-card {
-  width: 640px;
-  max-width: calc(100% - 80px);
-  background: #ffffff;
-  border-radius: 32px;
-  padding: 26px 32px 24px;
-  box-shadow: 0 18px 60px rgba(15, 23, 42, 0.3);
-}
+    .contribution-modal-card {
+      width: 640px;
+      max-width: calc(100% - 80px);
+      background: #ffffff;
+      border-radius: 32px;
+      padding: 26px 32px 24px;
+      box-shadow: 0 18px 60px rgba(15, 23, 42, 0.3);
+    }
 
-.contribution-modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 18px;
-}
+    .contribution-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
 
-.contribution-modal-title {
-  font-size: 22px;
-  font-weight: 700;
-}
+    .contribution-modal-title {
+      font-size: 22px;
+      font-weight: 700;
+    }
 
-.contribution-modal-close {
-  border: none;
-  background: transparent;
-  font-size: 22px;
-  cursor: pointer;
-  color: #4b5563;
-}
+    .contribution-modal-close {
+      border: none;
+      background: transparent;
+      font-size: 22px;
+      cursor: pointer;
+      color: #4b5563;
+    }
 
-/* 위쪽 큰 카드 */
-.contribution-main-card {
-  display: flex;
-  gap: 24px;
-  padding: 18px 20px 16px;
-  border-radius: 24px;
-  background: #f4f6ff;
-  margin-bottom: 22px;
-  align-items: center;
-  justify-content: center;
-}
+    /* 위쪽 큰 카드 */
+    .contribution-main-card {
+      display: flex;
+      gap: 24px;
+      padding: 18px 20px 16px;
+      border-radius: 24px;
+      background: #f4f6ff;
+      margin-bottom: 22px;
+      align-items: center;
+      justify-content: center;
+    }
 
-.contribution-circle {
-  --pct: 50;
-  width: 120px;
-  height: 120px;
-  border-radius: 999px;
-  background: conic-gradient(#4b6fff calc(var(--pct) * 1%), #e5e7eb 0);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+    .contribution-circle {
+      --pct: 50;
+      width: 120px;
+      height: 120px;
+      border-radius: 999px;
+      background: conic-gradient(#4b6fff calc(var(--pct) * 1%), #e5e7eb 0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-.contribution-circle-inner {
-  width: 82px;
-  height: 82px;
-  border-radius: 999px;
-  background: #f9fafb;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26px;
-  font-weight: 700;
-  color: #111827;
-}
+    .contribution-circle-inner {
+      width: 82px;
+      height: 82px;
+      border-radius: 999px;
+      background: #f9fafb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 700;
+      color: #111827;
+    }
 
-.contribution-main-text-title {
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 0px;
-}
+    .contribution-main-text-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 0px;
+    }
 
-.contribution-main-text-body {
-  font-size: 12px;
-  line-height: 1.8;
-  color: #4b5563;
-  white-space: pre-line;
-}
+    .contribution-main-text-body {
+      font-size: 12px;
+      line-height: 1.8;
+      color: #4b5563;
+      white-space: pre-line;
+    }
 
-/* 하단 가로 바들 */
-.contribution-sub-section {
-  margin-top: 10px;
-}
+    /* 하단 가로 바들 */
+    .contribution-sub-section {
+      margin-top: 10px;
+    }
 
-.contribution-row {
-  margin-top: 10px;
-}
+    .contribution-row {
+      margin-top: 10px;
+    }
 
-.contribution-row-label {
-  font-size: 13px;
-  margin-bottom: 4px;
-}
+    .contribution-row-label {
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
 
-.contribution-row-meta {
-  display: flex;
-  justify-content: flex-end;
-  font-size: 11px;
-  color: #6b7280;
-  margin-bottom: 4px;
-  gap: 8px;
-  align-items: center;
-}
+    .contribution-row-meta {
+      display: flex;
+      justify-content: flex-end;
+      font-size: 11px;
+      color: #6b7280;
+      margin-bottom: 4px;
+      gap: 8px;
+      align-items: center;
+    }
 
-.contribution-row-bar {
-  position: relative;
-  height: 8px;
-  border-radius: 999px;
-  background: #e5e6eb;
-  overflow: hidden;
-}
+    .contribution-row-bar {
+      position: relative;
+      height: 8px;
+      border-radius: 999px;
+      background: #e5e6eb;
+      overflow: hidden;
+    }
 
-.contribution-row-bar-fill {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(90deg, #5b8bff, #9b5bff);
-  width: 50%;
-}
+    .contribution-row-bar-fill {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #5b8bff, #9b5bff);
+      width: 50%;
+    }
 
   </style>
 </head>
@@ -1039,7 +1094,7 @@
               <span>프로젝트 관리</span>
             </li>
           </a>
-          <a href="prompt_list.html" class="nav-link">
+          <a href="market1.html" class="nav-link">
             <li class="nav-item">
               <div class="nav-icon">🛒</div>
               <span>프롬프트 마켓</span>
@@ -1095,8 +1150,20 @@
             <div class="bot-profile">
               <img src="photo.png" alt="AI Profile" />
             </div>
-            <div class="chat-bubble">안녕하세요! 😊  
- 지난번에 작성하던 글을 계속 작성해볼까요?</div>
+            <div class="chat-bubble">
+              작성해 주신 초안을 보니 유전자 재조합 기술의 원리와 긍정적 효과(Bt 옥수수), 그리고 개인적 경험까지 아주 매끄럽게 잘 연결하셨습니다. 특히 도입부와 본론의 앞부분이 탄탄해서, 이제 부정적인 영향에 대한 과학적 근거만 보강하면 훌륭한 글이 완성될 것 같습니다.
+              요청하신 대로 GMO가 생태계나 인간에게 미칠 수 있는 부정적 효과 5가지를 과학 교과 개념과 연결하여 정리해 드립니다. 이 중에서 과제 분량에 맞춰 1~2가지를 골라 살을 붙이거나, 내용을 요약해서 추가해 보세요.
+              GMO의 부정적 효과와 과학적 근거 (5가지)
+              1. '슈퍼 잡초'의 등장 (관련 개념: 자연 선택)
+              
+              2. 생물 다양성 감소 (관련 개념: 생물 다양성)
+              .
+              3. 생태계 먹이 사슬 교란 (관련 개념: 먹이 사슬)
+              
+              4. 유전자 오염과 토종 생태계 위협 (관련 개념: 유전자 이동, 교배)
+              
+              5. 알레르기 유발 및 예측 불가능한 부작용 (관련 개념: 단백질 합성)
+            </div>
           </div>
         </div>
 
@@ -1231,7 +1298,7 @@
       <!-- ✍️ 오른쪽 패널 : 실시간 글쓰기 보드 -->
       <aside class="write-side-panel" id="writePanel">
         <div class="write-header">
-            <input
+          <input
             type="text"
             id="writeTitleInput"
             class="write-title-input"
@@ -1243,58 +1310,61 @@
         </div>
 
         <div class="write-body">
-          <!-- <div class="write-content-label">내용을 입력하세요</div> -->
           <textarea
-  id="writeContentInput"
-  class="write-content-input"
+            id="writeContentInput"
+            class="write-content-input"
 >GMO를 만드는 핵심 원리는 ‘유전자 재조합’ 기술이다. 이는 어떤 생물에게서 유용한 유전자를 추출하여 다른 생물의 DNA에 끼워 넣어 새로운 형질을 만드는 기술이다. 이 기술의 대표적인 혜택은 식량 생산의 효율성이다. 예를 들어, 흙 속의 미생물인 ‘바실러스 튜링겐시스’의 살충 성분 유전자를 옥수수에 재조합한 ‘Bt 옥수수’는 해충에 강한 저항성을 가진다. 이는 농약 사용량을 줄이면서도 수확량을 늘려 식량 부족 문제를 해결하는 데 기여한다.
 실제로 나는 최근 마트에서 두부를 고르다가 포장지에 적힌 ‘Non-GMO’ 마크를 보고, GMO가 내 식탁과 얼마나 가까이 있는지 실감한 적이 있다. 또한 관련 다큐멘터리에서 GMO 종자가 토종 종자를 오염시키는 사례를 보며, 기술의 편리함 뒤에 숨겨진 환경적 비용을 고민하게 되었다.</textarea>
-
         </div>
 
-  
-          <!-- 💡 글쓰기 조언 카드 -->
-          <div class="write-advice-card">
-            <div class="write-advice-title">💡 글쓰기 조언</div>
-            <p class="write-advice-text">
-              선생님께 제출할 과학 글쓰기라면 다음과 같이 단어를 구별해서 쓰면 더 전문적으로 보일 것입니다.
-            </p>
-            <div class="write-advice-quote">
-              "흔히 환경 단체나 언론에서는 이를 **‘유전자 오염(Genetic Pollution)’**이라고 부르며 경각심을 주지만,
-              생물학적으로는 **‘유전자 이동(Gene Flow)’**이라는 현상으로 설명된다. 용어의 차이는 있지만, 두 단어 모두
-              인간의 통제를 벗어난 유전자가 생태계 질서를 무너뜨릴 수 있다는 위험성을 내포하고 있다."
-            </div>
-            <p class="write-advice-text">
-              이 문장을 활용해 4번 근거를 작성하시면 과학적 객관성과 비판적 시각을 모두 갖춘 훌륭한 글이 될 것입니다.
-            </p>
-            <div class="write-advice-actions">
-              <button type="button" class="advice-btn secondary">거절하기</button>
-              <button type="button" class="advice-btn primary">반영하기</button>
-            </div>
+        <!-- 💡 글쓰기 조언 카드 -->
+        <div class="write-advice-card">
+          <div class="write-advice-title">💡 글쓰기 조언</div>
+          <p class="write-advice-text">
+            선생님께 제출할 과학 글쓰기라면 다음과 같이 단어를 구별해서 쓰면 더 전문적으로 보일 것입니다.
+          </p>
+          <div class="write-advice-quote">
+            "흔히 환경 단체나 언론에서는 이를 **‘유전자 오염(Genetic Pollution)’**이라고 부르며 경각심을 주지만,
+            생물학적으로는 **‘유전자 이동(Gene Flow)’**이라는 현상으로 설명된다. 용어의 차이는 있지만, 두 단어 모두
+            인간의 통제를 벗어난 유전자가 생태계 질서를 무너뜨릴 수 있다는 위험성을 내포하고 있다."
           </div>
-  
-          <!-- 아래에 기존 write-footer (결과물 저장 버튼 영역) -->
-          <div class="write-footer">
-            <!-- 기존 "결과물 저장" 버튼 코드 -->
+          <p class="write-advice-text">
+            이 문장을 활용해 4번 근거를 작성하시면 과학적 객관성과 비판적 시각을 모두 갖춘 훌륭한 글이 될 것입니다.
+          </p>
+          <div class="write-advice-actions">
+            <button type="button" class="advice-btn secondary">새로고침</button>
+            <button type="button" class="advice-btn primary">반영하기</button>
           </div>
-  
-                <!-- 진척도 바 -->
-                <div class="write-progress-card" id="writeProgressCard">
-                    <div class="write-progress-bar-wrapper">
-                      <div
-                        id="writeProgressFill"
-                        class="write-progress-bar-fill"
-                      ></div>
-                      <div
-                        id="writeProgressMarker"
-                        class="write-progress-marker"
-                      >▼</div>
-                    </div>
-                    <div class="write-progress-label">
-                      답변 기여도 : <span id="writeProgressValue">0%</span>
-                    </div>
-                  </div>
-          
+        </div>
+
+        <!-- 진척도 바 -->
+        <div class="write-progress-card" id="writeProgressCard">
+          <div class="write-progress-bar-wrapper">
+            <div
+              id="writeProgressFill"
+              class="write-progress-bar-fill"
+            ></div>
+            <div
+              id="writeProgressMarker"
+              class="write-progress-marker"
+            >▼</div>
+          </div>
+
+          <div class="write-progress-bottom">
+            <div class="write-progress-label">
+              AI 기여도 : <span id="writeProgressValue">0%</span>
+            </div>
+            <button
+              type="button"
+              class="write-progress-detail-btn"
+              id="writeProgressDetailBtn"
+            >
+              <span class="write-progress-detail-text">상세보기</span>
+              <span class="write-progress-detail-icon">?</span>
+            </button>
+          </div>
+        </div>
+
         <div class="write-footer">
           <button type="button" id="saveResultBtn" class="save-btn" disabled>
             결과물 저장
@@ -1304,503 +1374,524 @@
     </div>
   </div>
 </div>
+
 <!-- 나의 기여도 모달 -->
 <div id="contributionModal" class="contribution-modal">
-    <div class="contribution-modal-card">
-      <div class="contribution-modal-header">
-        <div class="contribution-modal-title">나의 기여도</div>
-        <button
-          type="button"
-          class="contribution-modal-close"
-          id="closeContributionModalBtn"
-        >
-          ×
-        </button>
-      </div>
-  
-      <div class="contribution-modal-body">
-        <!-- 위쪽 큰 카드 -->
-        <div class="contribution-main-card">
-          <div id="contributionCircle" class="contribution-circle">
-            <div class="contribution-circle-inner" id="contributionMainPercent">
-              50%
-            </div>
-          </div>
-  
-          <div class="contribution-main-text">
-            <div class="contribution-main-text-title">자신의 생각이 뚜렷함</div>
-            <p class="contribution-main-text-body">
-  서론과 결론, 그리고 개인적인 경험이 들어가 있어 글의
-  독창성이 확보되었습니다.
-  
-  <strong>AI를 도구로 통제함</strong>
-  AI에게 전적으로 의존하지 않고, 필요한 정보(부정적 근거)만
-  뽑아낸 뒤, 본인의 기준(고1 수준)에 맞춰 글을 고쳐 쓰게
-  만들었습니다.
-            </p>
+  <div class="contribution-modal-card">
+    <div class="contribution-modal-header">
+      <div class="contribution-modal-title">AI의 기여도</div>
+      <button
+        type="button"
+        class="contribution-modal-close"
+        id="closeContributionModalBtn"
+      >
+        ×
+      </button>
+    </div>
+
+    <div class="contribution-modal-body">
+      <!-- 위쪽 큰 카드 -->
+      <div class="contribution-main-card">
+        <div id="contributionCircle" class="contribution-circle">
+          <div class="contribution-circle-inner" id="contributionMainPercent">
+            50%
           </div>
         </div>
-  
-        <!-- 아래 막대 그래프 3줄 -->
-        <div class="contribution-sub-section">
-          <div class="contribution-row">
-            <div class="contribution-row-label">기획 및 방향성</div>
-            <div class="contribution-row-meta">🙋‍♀️ 70% / 🤖 30%</div>
-            <div class="contribution-row-bar">
-              <div
-                class="contribution-row-bar-fill"
-                style="width: 70%"
-              ></div>
-            </div>
+
+        <div class="contribution-main-text">
+          <div class="contribution-main-text-title">자신의 생각이 뚜렷함</div>
+          <p class="contribution-main-text-body">
+서론과 결론, 그리고 개인적인 경험이 들어가 있어 글의
+독창성이 확보되었습니다.
+
+<strong>AI를 도구로 통제함</strong>
+AI에게 전적으로 의존하지 않고, 필요한 정보(부정적 근거)만
+뽑아낸 뒤, 본인의 기준(고1 수준)에 맞춰 글을 고쳐 쓰게
+만들었습니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- 아래 막대 그래프 3줄 -->
+      <div class="contribution-sub-section">
+        <div class="contribution-row">
+          <div class="contribution-row-label">기획 및 방향성</div>
+          <div class="contribution-row-meta">🙋‍♀️ 90% / 🤖 10%</div>
+          <div class="contribution-row-bar">
+            <div
+              class="contribution-row-bar-fill"
+              style="width: 90%"
+            ></div>
           </div>
-  
-          <div class="contribution-row">
-            <div class="contribution-row-label">글 내용 작성</div>
-            <div class="contribution-row-meta">🙋‍♀️ 45% / 🤖 55%</div>
-            <div class="contribution-row-bar">
-              <div
-                class="contribution-row-bar-fill"
-                style="width: 45%"
-              ></div>
-            </div>
+        </div>
+
+        <div class="contribution-row">
+          <div class="contribution-row-label">글 내용 작성</div>
+          <div class="contribution-row-meta">🙋‍♀️ 98% / 🤖 2%</div>
+          <div class="contribution-row-bar">
+            <div
+              class="contribution-row-bar-fill"
+              style="width: 98%"
+            ></div>
           </div>
-  
-          <div class="contribution-row">
-            <div class="contribution-row-label">근거 자료</div>
-            <div class="contribution-row-meta">🙋‍♀️ 35% / 🤖 65%</div>
-            <div class="contribution-row-bar">
-              <div
-                class="contribution-row-bar-fill"
-                style="width: 35%"
-              ></div>
-            </div>
+        </div>
+
+        <div class="contribution-row">
+          <div class="contribution-row-label">근거 자료</div>
+          <div class="contribution-row-meta">🙋‍♀️ 92% / 🤖 8%</div>
+          <div class="contribution-row-bar">
+            <div
+              class="contribution-row-bar-fill"
+              style="width: 92%"
+            ></div>
           </div>
         </div>
       </div>
     </div>
   </div>
-  <script>
-    // ===== 캔버스 스케일 =====
-    const BASE_WIDTH = 1440;
-    const BASE_HEIGHT = 900;
-  
-    function updateScale() {
-      const sx = window.innerWidth / BASE_WIDTH;
-      const sy = window.innerHeight / BASE_HEIGHT;
-      const scale = Math.min(sx, sy);
-      const root = document.getElementById("app-root");
-      root.style.transform = `scale(${scale}) translate(-50%, -50%)`;
-    }
-    window.addEventListener("resize", updateScale);
-    updateScale();
-  
-    // ===== 칩 세팅 =====
-    const subject = "생명과학";
-    const purpose = "에세이 작성";
-    const promptText = "설명형 글쓰기";
-    const chipRow = document.getElementById("chipRow");
-  
-    function addChip(label, value, closable = false) {
-      if (!value) return;
-      const chip = document.createElement("div");
-      chip.className = "chip";
-  
-      const labelSpan = document.createElement("span");
-      labelSpan.className = "chip-label";
-      labelSpan.textContent = label;
-  
-      const valueSpan = document.createElement("span");
-      valueSpan.textContent = " " + value;
-  
-      chip.appendChild(labelSpan);
-      chip.appendChild(valueSpan);
-  
-      if (closable) {
-        const closeBtn = document.createElement("button");
-        closeBtn.type = "button";
-        closeBtn.className = "chip-close";
-        closeBtn.textContent = "×";
-  
-        closeBtn.addEventListener("click", () => {
-          labelSpan.remove();
-          closeBtn.remove();
-          chip.classList.add("chip-add");
-          valueSpan.textContent = "프롬프트 추가하기";
-          chip.addEventListener(
-            "click",
-            () => {
-              console.log("프롬프트 추가하기 클릭");
-            },
-            { once: true }
-          );
-        });
-  
-        chip.appendChild(closeBtn);
-      }
-  
-      chipRow.appendChild(chip);
-    }
-  
-    addChip("과목", subject);
-    addChip("목적", purpose);
-    addChip("프롬프트", promptText, true);
-  
-    // ===== 더미 채팅 =====
-    const chatForm = document.getElementById("chatForm");
-    const chatInput = document.getElementById("chatInput");
-    const chatWindow = document.getElementById("chatWindow");
-    const initialMessage = document.getElementById("initialMessage");
-    let firstInteractionDone = false;
-  
-    function appendMessage(text, role = "user") {
-      const msg = document.createElement("div");
-      msg.className = `chat-message ${role}`;
-  
-      if (role === "bot") {
-        const profile = document.createElement("div");
-        profile.className = "bot-profile";
-        const img = document.createElement("img");
-        img.src = "photo.png";
-        img.alt = "AI Profile";
-        profile.appendChild(img);
-        msg.appendChild(profile);
-      }
-  
-      const bubble = document.createElement("div");
-      bubble.className = "chat-bubble";
-      if (role === "bot") {
-        bubble.style.background = "transparent";
-        bubble.style.padding = "0";
-        bubble.style.borderRadius = "0";
-      }
-      bubble.textContent = text;
-      msg.appendChild(bubble);
-      chatWindow.appendChild(msg);
-      chatWindow.scrollTop = chatWindow.scrollHeight;
-    }
-  
-    chatForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const value = chatInput.value.trim();
-      if (!value) return;
-  
-      if (!firstInteractionDone && initialMessage) {
-        initialMessage.remove();
-        firstInteractionDone = true;
-      }
-  
-      appendMessage(value, "user");
-      chatInput.value = "";
-  
-      setTimeout(() => {
-        appendMessage(
-  `작성해 주신 초안을 보니 유전자 재조합 기술의 원리와 긍정적 효과(Bt 옥수수), 그리고 개인적 경험까지 아주 매끄럽게 잘 연결하셨습니다. 특히 도입부와 본론의 앞부분이 탄탄해서, 이제 부정적인 영향에 대한 과학적 근거만 보강하면 훌륭한 글이 완성될 것 같습니다.
-  요청하신 대로 GMO가 생태계나 인간에게 미칠 수 있는 부정적 효과 5가지를 과학 교과 개념과 연결하여 정리해 드립니다. 이 중에서 과제 분량에 맞춰 1~2가지를 골라 살을 붙이거나, 내용을 요약해서 추가해 보세요.
-  GMO의 부정적 효과와 과학적 근거 (5가지)
-  1. '슈퍼 잡초'의 등장 (관련 개념: 자연 선택)
-  제초제에 내성을 가진 GMO 작물을 재배하면 농부는 잡초 제거를 위해 특정 제초제를 다량으로 살포하게 됩니다. 이 과정에서 살아남은 일부 잡초들이 **자연 선택(Natural Selection)**되어 번식하게 되고, 결국 더 강력한 제초제에도 죽지 않는 이른바 ‘슈퍼 잡초’가 등장합니다. 이는 더 독한 농약 사용을 부추겨 악순환을 만듭니다.
-  2. 생물 다양성 감소 (관련 개념: 생물 다양성)
-  특정 GMO 종자가 시장을 지배하면, 농가들은 수확량이 좋고 병해충에 강한 단일 품종만 재배하게 됩니다. 유전적으로 동일한 작물만 남게 되면, 특정 질병이나 환경 변화가 닥쳤을 때 전멸할 위험이 커집니다. 이는 작물의 유전적 다양성을 훼손하여 장기적으로 식량 안보를 위협할 수 있습니다.
-  3. 생태계 먹이 사슬 교란 (관련 개념: 먹이 사슬)
-  해충을 죽이는 독소를 가진 GMO 작물(예: Bt 옥수수)은 목표 해충뿐만 아니라 나비나 꿀벌 같은 **비표적 곤충(Non-target organism)**에게도 해를 입힐 수 있습니다. 꽃가루를 통해 독성 물질이 퍼지면, 해당 곤충을 먹이로 하는 상위 포식자에게도 영향을 주어 생태계 먹이 사슬(Food Chain) 전체의 균형이 흔들릴 수 있습니다.
-  4. 유전자 오염과 토종 생태계 위협 (관련 개념: 유전자 이동, 교배)
-  GMO 작물의 꽃가루가 바람이나 곤충을 타고 날아가 인근의 야생 식물이나 토종 작물과 교배될 수 있습니다. 이를 '유전자 오염'이라고 합니다. 야생 식물이 의도치 않게 제초제 내성 유전자를 갖게 되면 생태계 질서를 교란하고, 토종 종자의 순수성을 훼손할 수 있습니다. 한 번 자연계로 퍼진 유전자는 다시 회수할 수 없다는 점에서 치명적입니다.
-  5. 알레르기 유발 및 예측 불가능한 부작용 (관련 개념: 단백질 합성)
-  서로 다른 종의 유전자를 결합하는 과정에서 기존에 없던 새로운 단백질이 만들어질 수 있습니다. 예를 들어, 특정 견과류의 유전자를 콩에 이식했을 때, 견과류 알레르기가 있는 사람이 그 콩을 먹고 알레르기 반응을 일으킬 가능성이 있습니다. 장기간 섭취 시 인체에 어떤 영향을 미칠지 아직 완벽하게 검증되지 않았다는 점도 불안 요소입니다.
-  `,
-          "bot"
+</div>
+
+<script>
+  // ===== 캔버스 스케일 =====
+  const BASE_WIDTH = 1440;
+  const BASE_HEIGHT = 900;
+
+  // ✍️ 글쓰기 조언 카드 전역 상태
+  const adviceCard = document.querySelector(".write-advice-card");
+  let adviceShown = false; // ✅ 한 번만 뜨게 관리할 플래그
+
+  function updateScale() {
+    const sx = window.innerWidth / BASE_WIDTH;
+    const sy = window.innerHeight / BASE_HEIGHT;
+    const scale = Math.min(sx, sy);
+    const root = document.getElementById("app-root");
+    root.style.transform = `scale(${scale}) translate(-50%, -50%)`;
+  }
+  window.addEventListener("resize", updateScale);
+  updateScale();
+
+  // ===== 칩 세팅 =====
+  const subject = "생명과학";
+  const purpose = "에세이 작성";
+  const promptText = "설명형 글쓰기";
+  const chipRow = document.getElementById("chipRow");
+
+  function addChip(label, value, closable = false) {
+    if (!value) return;
+    const chip = document.createElement("div");
+    chip.className = "chip";
+
+    const labelSpan = document.createElement("span");
+    labelSpan.className = "chip-label";
+    labelSpan.textContent = label;
+
+    const valueSpan = document.createElement("span");
+    valueSpan.textContent = " " + value;
+
+    chip.appendChild(labelSpan);
+    chip.appendChild(valueSpan);
+
+    if (closable) {
+      const closeBtn = document.createElement("button");
+      closeBtn.type = "button";
+      closeBtn.className = "chip-close";
+      closeBtn.textContent = "×";
+
+      closeBtn.addEventListener("click", () => {
+        labelSpan.remove();
+        closeBtn.remove();
+        chip.classList.add("chip-add");
+        valueSpan.textContent = "프롬프트 추가하기";
+        chip.addEventListener(
+          "click",
+          () => {
+            console.log("프롬프트 추가하기 클릭");
+          },
+          { once: true }
         );
-      }, 500);
-    });
-  
-    // ===== 오른쪽 패널 + 도구 버튼 상태 =====
-    const promptPanel = document.getElementById("promptPanel");
-    const openPromptPanelBtn = document.getElementById("openPromptPanelBtn");
-    const closePromptPanelBtn = document.getElementById("closePromptPanelBtn");
-  
-    const writePanel = document.getElementById("writePanel");
-    const openWritePanelBtn = document.getElementById("openWritePanelBtn");
-    const closeWritePanelBtn = document.getElementById("closeWritePanelBtn");
-  
-    const writeTitleInput = document.getElementById("writeTitleInput");
-    const writeContentInput = document.getElementById("writeContentInput");
-    const saveResultBtn = document.getElementById("saveResultBtn");
-  
-    const toolButtons = document.querySelectorAll(".chat-tool-btn");
-    const perspectiveBtn = openPromptPanelBtn;
-    const writeBtn = openWritePanelBtn;
-  
-    function dimOtherToolButtons(activeBtn) {
-      toolButtons.forEach((btn) => {
-        if (btn === activeBtn) {
-          btn.style.opacity = "1";
-          btn.style.pointerEvents = "auto";
-        } else {
-          btn.style.opacity = "0.3";
-          btn.style.pointerEvents = "none";
-        }
       });
+
+      chip.appendChild(closeBtn);
     }
-  
-    function restoreToolButtons() {
-      toolButtons.forEach((btn) => {
+
+    chipRow.appendChild(chip);
+  }
+
+  addChip("과목", subject);
+  addChip("목적", purpose);
+  addChip("프롬프트", promptText, true);
+
+  // ===== 더미 채팅 =====
+  const chatForm = document.getElementById("chatForm");
+  const chatInput = document.getElementById("chatInput");
+  const chatWindow = document.getElementById("chatWindow");
+  const initialMessage = document.getElementById("initialMessage");
+  let firstInteractionDone = false;
+
+  function appendMessage(text, role = "user") {
+    const msg = document.createElement("div");
+    msg.className = `chat-message ${role}`;
+
+    if (role === "bot") {
+      const profile = document.createElement("div");
+      profile.className = "bot-profile";
+      const img = document.createElement("img");
+      img.src = "photo.png";
+      img.alt = "AI Profile";
+      profile.appendChild(img);
+      msg.appendChild(profile);
+    }
+
+    const bubble = document.createElement("div");
+    bubble.className = "chat-bubble";
+    if (role === "bot") {
+      bubble.style.background = "transparent";
+      bubble.style.padding = "0";
+      bubble.style.borderRadius = "0";
+    }
+    bubble.textContent = text;
+    msg.appendChild(bubble);
+    chatWindow.appendChild(msg);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
+
+  chatForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const value = chatInput.value.trim();
+    if (!value) return;
+
+    if (!firstInteractionDone && initialMessage) {
+      initialMessage.remove();
+      firstInteractionDone = true;
+    }
+
+    appendMessage(value, "user");
+    chatInput.value = "";
+
+    setTimeout(() => {
+      appendMessage(
+`작성해 주신 초안을 보니 유전자 재조합 기술의 원리와 긍정적 효과(Bt 옥수수), 그리고 개인적 경험까지 아주 매끄럽게 잘 연결하셨습니다. 특히 도입부와 본론의 앞부분이 탄탄해서, 이제 부정적인 영향에 대한 과학적 근거만 보강하면 훌륭한 글이 완성될 것 같습니다.
+요청하신 대로 GMO가 생태계나 인간에게 미칠 수 있는 부정적 효과 5가지를 과학 교과 개념과 연결하여 정리해 드립니다. 이 중에서 과제 분량에 맞춰 1~2가지를 골라 살을 붙이거나, 내용을 요약해서 추가해 보세요.
+GMO의 부정적 효과와 과학적 근거 (5가지)
+1. '슈퍼 잡초'의 등장 (관련 개념: 자연 선택)
+제초제에 내성을 가진 GMO 작물을 재배하면 농부는 잡초 제거를 위해 특정 제초제를 다량으로 살포하게 됩니다. 이 과정에서 살아남은 일부 잡초들이 **자연 선택(Natural Selection)**되어 번식하게 되고, 결국 더 강력한 제초제에도 죽지 않는 이른바 ‘슈퍼 잡초’가 등장합니다. 이는 더 독한 농약 사용을 부추겨 악순환을 만듭니다.
+2. 생물 다양성 감소 (관련 개념: 생물 다양성)
+특정 GMO 종자가 시장을 지배하면, 농가들은 수확량이 좋고 병해충에 강한 단일 품종만 재배하게 됩니다. 유전적으로 동일한 작물만 남게 되면, 특정 질병이나 환경 변화가 닥쳤을 때 전멸할 위험이 커집니다. 이는 작물의 유전적 다양성을 훼손하여 장기적으로 식량 안보를 위협할 수 있습니다.
+3. 생태계 먹이 사슬 교란 (관련 개념: 먹이 사슬)
+해충을 죽이는 독소를 가진 GMO 작물(예: Bt 옥수수)은 목표 해충뿐만 아니라 나비나 꿀벌 같은 **비표적 곤충(Non-target organism)**에게도 해를 입힐 수 있습니다. 꽃가루를 통해 독성 물질이 퍼지면, 해당 곤충을 먹이로 하는 상위 포식자에게도 영향을 주어 생태계 먹이 사슬(Food Chain) 전체의 균형이 흔들릴 수 있습니다.
+4. 유전자 오염과 토종 생태계 위협 (관련 개념: 유전자 이동, 교배)
+GMO 작물의 꽃가루가 바람이나 곤충을 타고 날아가 인근의 야생 식물이나 토종 작물과 교배될 수 있습니다. 이를 '유전자 오염'이라고 합니다. 야생 식물이 의도치 않게 제초제 내성 유전자를 갖게 되면 생태계 질서를 교란하고, 토종 종자의 순수성을 훼손할 수 있습니다. 한 번 자연계로 퍼진 유전자는 다시 회수할 수 없다는 점에서 치명적입니다.
+5. 알레르기 유발 및 예측 불가능한 부작용 (관련 개념: 단백질 합성)
+서로 다른 종의 유전자를 결합하는 과정에서 기존에 없던 새로운 단백질이 만들어질 수 있습니다. 예를 들어, 특정 견과류의 유전자를 콩에 이식했을 때, 견과류 알레르기가 있는 사람이 그 콩을 먹고 알레르기 반응을 일으킬 가능성이 있습니다. 장기간 섭취 시 인체에 어떤 영향을 미칠지 아직 완벽하게 검증되지 않았다는 점도 불안 요소입니다.
+`,
+        "bot"
+      );
+
+      // ✅ 여기서 한 번만 글쓰기 조언 카드 보여주기
+      if (!adviceShown && adviceCard) {
+        adviceShown = true;
+        adviceCard.style.display = "block";
+        // 필요하면 자동으로 글쓰기 패널 열기:
+        // openWritePanel();
+      }
+    }, 500);
+  });
+
+  // ===== 오른쪽 패널 + 도구 버튼 상태 =====
+  const promptPanel = document.getElementById("promptPanel");
+  const openPromptPanelBtn = document.getElementById("openPromptPanelBtn");
+  const closePromptPanelBtn = document.getElementById("closePromptPanelBtn");
+
+  const writePanel = document.getElementById("writePanel");
+  const openWritePanelBtn = document.getElementById("openWritePanelBtn");
+  const closeWritePanelBtn = document.getElementById("closeWritePanelBtn");
+
+  const writeTitleInput = document.getElementById("writeTitleInput");
+  const writeContentInput = document.getElementById("writeContentInput");
+  const saveResultBtn = document.getElementById("saveResultBtn");
+
+  const toolButtons = document.querySelectorAll(".chat-tool-btn");
+  const perspectiveBtn = openPromptPanelBtn;
+  const writeBtn = openWritePanelBtn;
+
+  // ✅ 선택된 버튼에 is-selected 클래스 부여
+  function dimOtherToolButtons(activeBtn) {
+    toolButtons.forEach((btn) => {
+      if (btn === activeBtn) {
         btn.style.opacity = "1";
         btn.style.pointerEvents = "auto";
-      });
-    }
-  
-    function openPromptPanel() {
-      promptPanel.classList.add("is-open");
-      writePanel.classList.remove("is-open");
-      dimOtherToolButtons(perspectiveBtn);
-    }
-  
-    function openWritePanel() {
-      writePanel.classList.add("is-open");
-      promptPanel.classList.remove("is-open");
-      dimOtherToolButtons(writeBtn);
-      // 패널 열릴 때 현재 진척도 다시 반영
-      setWriteProgress(currentWriteProgress);
-    }
-  
-    function closeAllPanels() {
-      promptPanel.classList.remove("is-open");
-      writePanel.classList.remove("is-open");
-      restoreToolButtons();
-    }
-  
-    openPromptPanelBtn.addEventListener("click", openPromptPanel);
-    closePromptPanelBtn.addEventListener("click", closeAllPanels);
-  
-    openWritePanelBtn.addEventListener("click", openWritePanel);
-    closeWritePanelBtn.addEventListener("click", closeAllPanels);
-  
-    // ===== 저장 버튼 활성화 =====
-    function updateSaveButtonState() {
-      const hasTitle = writeTitleInput.value.trim().length > 0;
-      const hasContent = writeContentInput.value.trim().length > 0;
-      saveResultBtn.disabled = !(hasTitle && hasContent);
-    }
-  
-    writeTitleInput.addEventListener("input", updateSaveButtonState);
-    writeContentInput.addEventListener("input", updateSaveButtonState);
-  
-    saveResultBtn.addEventListener("click", () => {
-      if (saveResultBtn.disabled) return;
-      const title = writeTitleInput.value.trim();
-      const content = writeContentInput.value.trim();
-      console.log("저장될 내용:", { title, content });
+        btn.classList.add("is-selected");
+      } else {
+        btn.style.opacity = "0.3";
+        btn.style.pointerEvents = "none";
+        btn.classList.remove("is-selected");
+      }
     });
-  
-    // ===== 장바구니 → 사이드바 슬롯 =====
-    const basketSlots = document.querySelectorAll(".basket-slot");
-    const usedTitles = new Set();
-    const sidebarBasket = document.getElementById("sidebarBasket");
-  
-    function fillSlot(slot, title) {
-      if (!slot || slot.classList.contains("filled")) return;
-      if (usedTitles.has(title)) return;
-  
-      usedTitles.add(title);
-      slot.classList.add("filled");
-      slot.innerHTML = "";
-  
-      const dot = document.createElement("span");
-      dot.className = "basket-dot";
-  
-      const text = document.createElement("span");
-      text.textContent = title;
-  
-      slot.appendChild(dot);
-      slot.appendChild(text);
-    }
-  
-    function addToSidebarBasket(title) {
-      if (usedTitles.has(title)) return;
-      for (const slot of basketSlots) {
-        if (!slot.classList.contains("filled")) {
-          fillSlot(slot, title);
-          break;
-        }
+  }
+
+  function restoreToolButtons() {
+    toolButtons.forEach((btn) => {
+      btn.style.opacity = "1";
+      btn.style.pointerEvents = "auto";
+      btn.classList.remove("is-selected");
+    });
+  }
+
+  function openPromptPanel() {
+    promptPanel.classList.add("is-open");
+    writePanel.classList.remove("is-open");
+    dimOtherToolButtons(perspectiveBtn);
+  }
+
+  function openWritePanel() {
+    writePanel.classList.add("is-open");
+    promptPanel.classList.remove("is-open");
+    dimOtherToolButtons(writeBtn);
+    // 패널 열릴 때 현재 진척도 다시 반영
+    setWriteProgress(currentWriteProgress);
+  }
+
+  function closeAllPanels() {
+    promptPanel.classList.remove("is-open");
+    writePanel.classList.remove("is-open");
+    restoreToolButtons();
+  }
+
+  openPromptPanelBtn.addEventListener("click", openPromptPanel);
+  closePromptPanelBtn.addEventListener("click", closeAllPanels);
+
+  openWritePanelBtn.addEventListener("click", openWritePanel);
+  closeWritePanelBtn.addEventListener("click", closeAllPanels);
+
+  // ===== 저장 버튼 활성화 =====
+  function updateSaveButtonState() {
+    const hasTitle = writeTitleInput.value.trim().length > 0;
+    const hasContent = writeContentInput.value.trim().length > 0;
+    saveResultBtn.disabled = !(hasTitle && hasContent);
+  }
+
+  writeTitleInput.addEventListener("input", updateSaveButtonState);
+  writeContentInput.addEventListener("input", updateSaveButtonState);
+
+  saveResultBtn.addEventListener("click", () => {
+    if (saveResultBtn.disabled) return;
+    const title = writeTitleInput.value.trim();
+    const content = writeContentInput.value.trim();
+    console.log("저장될 내용:", { title, content });
+  });
+
+  // ===== 장바구니 → 사이드바 슬롯 =====
+  const basketSlots = document.querySelectorAll(".basket-slot");
+  const usedTitles = new Set();
+  const sidebarBasket = document.getElementById("sidebarBasket");
+
+  function fillSlot(slot, title) {
+    if (!slot || slot.classList.contains("filled")) return;
+    if (usedTitles.has(title)) return;
+
+    usedTitles.add(title);
+    slot.classList.add("filled");
+    slot.innerHTML = "";
+
+    const dot = document.createElement("span");
+    dot.className = "basket-dot";
+
+    const text = document.createElement("span");
+    text.textContent = title;
+
+    slot.appendChild(dot);
+    slot.appendChild(text);
+  }
+
+  function addToSidebarBasket(title) {
+    if (usedTitles.has(title)) return;
+    for (const slot of basketSlots) {
+      if (!slot.classList.contains("filled")) {
+        fillSlot(slot, title);
+        break;
       }
     }
-  
-    document.querySelectorAll(".prompt-vertical-item").forEach((item) => {
-      const btn = item.querySelector(".prompt-add-btn");
-      const titleEl = item.querySelector(".prompt-vertical-title");
-  
-      if (!btn || !titleEl) return;
-  
-      btn.addEventListener("click", () => {
-        const title = titleEl.textContent.trim();
-        addToSidebarBasket(title);
-        btn.textContent = "✓";
-        btn.disabled = true;
-      });
+  }
+
+  document.querySelectorAll(".prompt-vertical-item").forEach((item) => {
+    const btn = item.querySelector(".prompt-add-btn");
+    const titleEl = item.querySelector(".prompt-vertical-title");
+
+    if (!btn || !titleEl) return;
+
+    btn.addEventListener("click", () => {
+      const title = titleEl.textContent.trim();
+      addToSidebarBasket(title);
+      btn.textContent = "✓";
+      btn.disabled = true;
     });
-  
-    // ===== 드래그 앤 드롭 =====
-    let draggedItem = null;
-  
-    document.querySelectorAll(".prompt-vertical-item").forEach((item) => {
-      const titleEl = item.querySelector(".prompt-vertical-title");
-      if (!titleEl) return;
-  
-      item.setAttribute("draggable", "true");
-  
-      item.addEventListener("dragstart", (e) => {
-        draggedItem = item;
-        item.classList.add("dragging");
-        const title = titleEl.textContent.trim();
-        e.dataTransfer.effectAllowed = "copy";
-        e.dataTransfer.setData("text/plain", title);
-        sidebarBasket.classList.add("drag-target");
-      });
-  
-      item.addEventListener("dragend", () => {
-        draggedItem = null;
-        item.classList.remove("dragging");
-        sidebarBasket.classList.remove("drag-target");
-      });
+  });
+
+  // ===== 드래그 앤 드롭 =====
+  let draggedItem = null;
+
+  document.querySelectorAll(".prompt-vertical-item").forEach((item) => {
+    const titleEl = item.querySelector(".prompt-vertical-title");
+    if (!titleEl) return;
+
+    item.setAttribute("draggable", "true");
+
+    item.addEventListener("dragstart", (e) => {
+      draggedItem = item;
+      item.classList.add("dragging");
+      const title = titleEl.textContent.trim();
+      e.dataTransfer.effectAllowed = "copy";
+      e.dataTransfer.setData("text/plain", title);
+      sidebarBasket.classList.add("drag-target");
     });
-  
-    sidebarBasket.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      e.dataTransfer.dropEffect = "copy";
-    });
-  
-    sidebarBasket.addEventListener("drop", (e) => {
-      e.preventDefault();
+
+    item.addEventListener("dragend", () => {
+      draggedItem = null;
+      item.classList.remove("dragging");
       sidebarBasket.classList.remove("drag-target");
-  
-      const title = e.dataTransfer.getData("text/plain");
-      if (!title) return;
-  
-      const x = e.clientX;
-      const y = e.clientY;
-      let targetSlot = null;
-  
+    });
+  });
+
+  sidebarBasket.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+  });
+
+  sidebarBasket.addEventListener("drop", (e) => {
+    e.preventDefault();
+    sidebarBasket.classList.remove("drag-target");
+
+    const title = e.dataTransfer.getData("text/plain");
+    if (!title) return;
+
+    const x = e.clientX;
+    const y = e.clientY;
+    let targetSlot = null;
+
+    basketSlots.forEach((slot) => {
+      const rect = slot.getBoundingClientRect();
+      if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+        targetSlot = slot;
+      }
+    });
+
+    if (!targetSlot) {
       basketSlots.forEach((slot) => {
-        const rect = slot.getBoundingClientRect();
-        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+        if (!targetSlot && !slot.classList.contains("filled")) {
           targetSlot = slot;
         }
       });
-  
-      if (!targetSlot) {
-        basketSlots.forEach((slot) => {
-          if (!targetSlot && !slot.classList.contains("filled")) {
-            targetSlot = slot;
-          }
-        });
-      }
-  
-      if (!targetSlot) return;
-  
-      fillSlot(targetSlot, title);
-  
-      if (draggedItem) {
-        const btn = draggedItem.querySelector(".prompt-add-btn");
-        if (btn && !btn.disabled) {
-          btn.textContent = "✓";
-          btn.disabled = true;
-        }
-      }
-    });
-  
-    // ===== 나의 기여도 모달 =====
-    const contributionModal = document.getElementById("contributionModal");
-    const writeProgressCard = document.getElementById("writeProgressCard");
-    const closeContributionModalBtn = document.getElementById("closeContributionModalBtn");
-    const contributionCircle = document.getElementById("contributionCircle");
-    const contributionMainPercent = document.getElementById("contributionMainPercent");
-  
-    function openContributionModal() {
-      if (contributionModal) {
-        contributionModal.classList.add("is-open");
+    }
+
+    if (!targetSlot) return;
+
+    fillSlot(targetSlot, title);
+
+    if (draggedItem) {
+      const btn = draggedItem.querySelector(".prompt-add-btn");
+      if (btn && !btn.disabled) {
+        btn.textContent = "✓";
+        btn.disabled = true;
       }
     }
-  
-    function closeContributionModal() {
-      if (contributionModal) {
-        contributionModal.classList.remove("is-open");
-      }
-    }
-  
-    if (writeProgressCard) {
-      writeProgressCard.addEventListener("click", openContributionModal);
-    }
-    if (closeContributionModalBtn) {
-      closeContributionModalBtn.addEventListener("click", closeContributionModal);
-    }
+  });
+
+  // ===== 나의 기여도 모달 =====
+  const contributionModal = document.getElementById("contributionModal");
+  const writeProgressCard = document.getElementById("writeProgressCard");
+  const closeContributionModalBtn = document.getElementById("closeContributionModalBtn");
+  const contributionCircle = document.getElementById("contributionCircle");
+  const contributionMainPercent = document.getElementById("contributionMainPercent");
+  const writeProgressDetailBtn = document.getElementById("writeProgressDetailBtn"); // ✅ 추가
+
+  function openContributionModal() {
     if (contributionModal) {
-      contributionModal.addEventListener("click", (e) => {
-        if (e.target === contributionModal) closeContributionModal();
-      });
+      contributionModal.classList.add("is-open");
     }
-  
-    function updateContributionModal(pct) {
-      if (!contributionCircle || !contributionMainPercent) return;
-      contributionCircle.style.setProperty("--pct", pct);
-      contributionMainPercent.textContent = pct + "%";
+  }
+
+  function closeContributionModal() {
+    if (contributionModal) {
+      contributionModal.classList.remove("is-open");
     }
-  
-    // ===== 실시간 글쓰기 : 진척도 바 =====
-    const writeProgressFill = document.getElementById("writeProgressFill");
-    const writeProgressMarker = document.getElementById("writeProgressMarker");
-    const writeProgressValue = document.getElementById("writeProgressValue");
-  
-    function setWriteProgress(pct) {
-      const clamped = Math.max(0, Math.min(100, pct));
-      writeProgressFill.style.width = clamped + "%";
-      writeProgressMarker.style.left = clamped + "%";
-      writeProgressValue.textContent = clamped + "%";
-      updateContributionModal(clamped); // 모달 그래프도 함께 갱신
-    }
-  
-    // 초기 진척도 80%
-    let currentWriteProgress = 80;
-    setWriteProgress(currentWriteProgress);
-  
-    // ===== 글쓰기 조언 카드 & 반영하기 동작 =====
-    const adviceCard = document.querySelector(".write-advice-card");
-    const adviceApplyBtn = adviceCard
-      ? adviceCard.querySelector(".advice-btn.primary")
-      : null;
-  
-    if (adviceApplyBtn) {
-      adviceApplyBtn.addEventListener("click", () => {
-        // 1) 카드 제거
-        if (adviceCard) {
-          adviceCard.remove();
-        }
-  
-        // 2) 내용 교체
-        const newText = `GMO를 만드는 핵심 원리는 ‘유전자 재조합’ 기술이다. 이는 어떤 생물에게서 유용한 유전자를 추출하여 다른 생물의 DNA에 끼워 넣어 새로운 형질을 만드는 기술이다. 이 기술의 대표적인 혜택은 식량 생산의 효율성이다. 예를 들어, 흙 속의 미생물인 ‘바실러스 튜링겐시스’의 살충 성분 유전자를 옥수수에 재조합한 **‘Bt 옥수수’**는 해충에 강한 저항성을 가진다. 이는 농약 사용량을 줄이면서도 수확량을 늘려 식량 부족 문제를 해결하는 데 기여한다.
-  
-  실제로 나는 최근 마트에서 두부를 고르다가 포장지에 적힌 ‘Non-GMO’ 마크를 보고, GMO가 내 식탁과 얼마나 가까이 있는지 실감한 적이 있다. 또한 관련 다큐멘터리에서 GMO 종자가 토종 종자를 오염시키는 사례를 보며, 기술의 편리함 뒤에 숨겨진 환경적 비용을 고민하게 되었다.
-  
-  환경 문제에서 가장 걱정되는 것은 바로 **'유전자 오염'**이다. 실제로 한 기사에서는 **"GMO에 관한 불안 중 안전성 논란보다 우려되는 것은 '유전자 오염'이다"**라고 강조했다. 먹거리 안전 문제보다 생태계 오염이 더 해결하기 어렵다는 뜻이다.
-  
-  이는 과학적으로 GMO 작물의 꽃가루가 바람이나 곤충을 타고 날아가, 근처에 있는 야생 식물이나 토종 작물과 교배되는 현상을 말한다. 이렇게 되면 숲이나 들판에 있는 식물들이 사람의 의도와 다르게 GMO 유전자를 갖게 된다. 가장 큰 문제는 한 번 자연으로 퍼져 섞인 유전자는 다시 원래대로 되돌릴 수 없다는 점이다. 결국 우리나라 고유의 토종 종자가 원래 모습을 잃게 되고, 이는 장기적으로 생물 다양성을 파괴해 생태계의 균형을 무너뜨릴 수 있다.
-  
-  하지만 이러한 부정적인 측면이 존재한다고 해서 기술 자체를 포기해야 하는 것은 아니다. 나는 과학 기술이 발전함에 따라 기존 생태계에 영향을 미치지 않고도 식량을 확보하려는 목적을 충분히 달성할 수 있다고 생각한다. 핵심은 GMO의 연구와 재배가 주변 생태계와 완벽히 분리된 공간에서만 이루어지도록 하는 것이다. 외부와 철저히 차단된 재배 환경을 마련한다면 유전자 오염 걱정 없이 식량 생산 효율을 높일 수 있을 것이다. 따라서 앞으로의 과학은 단순히 새로운 품종을 개발하는 것을 넘어, 이를 자연과 격리하여 안전하게 관리할 수 있는 환경을 구축하는 것이 가장 큰 과제가 될 것이다.`;
-  
-        writeContentInput.value = newText;
-  
-        // 3) 진척도 50%로 변경
-        currentWriteProgress = 50;
-        setWriteProgress(currentWriteProgress);
-  
-        // 4) 저장 버튼 상태 갱신
-        updateSaveButtonState();
-      });
-    }
-  
-    // 필요하면 거절하기 버튼 로직도 여기 추가 가능
-  </script>
-  
-  
+  }
+
+  if (writeProgressCard) {
+    writeProgressCard.addEventListener("click", openContributionModal);
+  }
+  if (writeProgressDetailBtn) {
+    writeProgressDetailBtn.addEventListener("click", (e) => {
+      e.stopPropagation(); // 카드 클릭 이벤트랑 겹치지 않게
+      openContributionModal();
+    });
+  }
+  if (closeContributionModalBtn) {
+    closeContributionModalBtn.addEventListener("click", closeContributionModal);
+  }
+  if (contributionModal) {
+    contributionModal.addEventListener("click", (e) => {
+      if (e.target === contributionModal) closeContributionModal();
+    });
+  }
+
+  function updateContributionModal(pct) {
+    if (!contributionCircle || !contributionMainPercent) return;
+    contributionCircle.style.setProperty("--pct", pct);
+    contributionMainPercent.textContent = pct + "%";
+  }
+
+  // ===== 실시간 글쓰기 : 진척도 바 =====
+  const writeProgressFill = document.getElementById("writeProgressFill");
+  const writeProgressMarker = document.getElementById("writeProgressMarker");
+  const writeProgressValue = document.getElementById("writeProgressValue");
+
+  function setWriteProgress(pct) {
+    const clamped = Math.max(0, Math.min(100, pct));
+    if (writeProgressFill) writeProgressFill.style.width = clamped + "%";
+    if (writeProgressMarker) writeProgressMarker.style.left = clamped + "%";
+    if (writeProgressValue) writeProgressValue.textContent = clamped + "%";
+    updateContributionModal(clamped); // 모달 그래프도 함께 갱신
+  }
+
+  // 초기 AI 기여도 5%
+  let currentWriteProgress = 5;
+  setWriteProgress(currentWriteProgress);
+
+  // ===== 글쓰기 조언 카드 & 반영하기 동작 =====
+  const adviceApplyBtn = adviceCard
+    ? adviceCard.querySelector(".advice-btn.primary")
+    : null;
+
+  if (adviceApplyBtn) {
+    adviceApplyBtn.addEventListener("click", () => {
+      // 1) 카드 제거
+      if (adviceCard) {
+        adviceCard.remove();
+      }
+
+      // 2) 내용 교체
+      const newText = `GMO를 만드는 핵심 원리는 ‘유전자 재조합’ 기술이다. 이는 어떤 생물에게서 유용한 유전자를 추출하여 다른 생물의 DNA에 끼워 넣어 새로운 형질을 만드는 기술이다. 이 기술의 대표적인 혜택은 식량 생산의 효율성이다. 예를 들어, 흙 속의 미생물인 ‘바실러스 튜링겐시스’의 살충 성분 유전자를 옥수수에 재조합한 **‘Bt 옥수수’**는 해충에 강한 저항성을 가진다. 이는 농약 사용량을 줄이면서도 수확량을 늘려 식량 부족 문제를 해결하는 데 기여한다.
+
+실제로 나는 최근 마트에서 두부를 고르다가 포장지에 적힌 ‘Non-GMO’ 마크를 보고, GMO가 내 식탁과 얼마나 가까이 있는지 실감한 적이 있다. 또한 관련 다큐멘터리에서 GMO 종자가 토종 종자를 오염시키는 사례를 보며, 기술의 편리함 뒤에 숨겨진 환경적 비용을 고민하게 되었다.
+
+환경 문제에서 가장 걱정되는 것은 바로 **'유전자 오염'**이다. 실제로 한 기사에서는 **"GMO에 관한 불안 중 안전성 논란보다 우려되는 것은 '유전자 오염'이다"**라고 강조했다. 먹거리 안전 문제보다 생태계 오염이 더 해결하기 어렵다는 뜻이다.
+
+이는 과학적으로 GMO 작물의 꽃가루가 바람이나 곤충을 타고 날아가, 근처에 있는 야생 식물이나 토종 작물과 교배되는 현상을 말한다. 이렇게 되면 숲이나 들판에 있는 식물들이 사람의 의도와 다르게 GMO 유전자를 갖게 된다. 가장 큰 문제는 한 번 자연으로 퍼져 섞인 유전자는 다시 원래대로 되돌릴 수 없다는 점이다. 결국 우리나라 고유의 토종 종자가 원래 모습을 잃게 되고, 이는 장기적으로 생물 다양성을 파괴해 생태계의 균형을 무너뜨릴 수 있다.
+
+하지만 이러한 부정적인 측면이 존재한다고 해서 기술 자체를 포기해야 하는 것은 아니다. 나는 과학 기술이 발전함에 따라 기존 생태계에 영향을 미치지 않고도 식량을 확보하려는 목적을 충분히 달성할 수 있다고 생각한다. 핵심은 GMO의 연구와 재배가 주변 생태계와 완벽히 분리된 공간에서만 이루어지도록 하는 것이다. 외부와 철저히 차단된 재배 환경을 마련한다면 유전자 오염 걱정 없이 식량 생산 효율을 높일 수 있을 것이다. 따라서 앞으로의 과학은 단순히 새로운 품종을 개발하는 것을 넘어, 이를 자연과 격리하여 안전하게 관리할 수 있는 환경을 구축하는 것이 가장 큰 과제가 될 것이다.`;
+
+      writeContentInput.value = newText;
+
+      // 3) AI 기여도 10%로 변경 (기존 5% → 10%)
+      currentWriteProgress = 10;
+      setWriteProgress(currentWriteProgress);
+
+      // 4) 저장 버튼 상태 갱신
+      updateSaveButtonState();
+    });
+  }
+</script>
+
 
 </body>
 </html>

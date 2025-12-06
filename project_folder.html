@@ -296,6 +296,7 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
+      min-height: 140px;
     }
 
     .project-card-header {
@@ -420,7 +421,7 @@
       padding: 40px 32px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: space-between; /* 상단: 스텝퍼 / 하단: 선택한 설정 */
       border-right: 6px solid #f0f0f0;
     }
 
@@ -470,20 +471,18 @@
       box-shadow: 0 0 0 4px rgba(37, 99, 255, 0.16);
     }
 
+    /* 오른쪽 하단 버튼 스타일 (폴더 생성하기 용) */
     .subject-left-footer-btn {
-      width: 100%;
-      padding: 16px 0;
+      padding: 12px 18px;
       border-radius: 12px;
       border: none;
       background: #eeeeee;
       color: #b5b5b5;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
       cursor: default;
       transition: background 0.15s ease, color 0.15s ease;
     }
-
-    /* 활성화된 상태 */
     .subject-left-footer-btn.enabled {
       background: #2563ff;
       color: #ffffff;
@@ -569,10 +568,9 @@
       background: #f5cf7a;
     }
 
-    /* 선택 요약 박스 (왼쪽, 폴더 버튼 위) */
+    /* 선택 요약 박스 (왼쪽 하단으로 이동) */
     .selection-summary-box {
       margin-top: 12px;
-      margin-bottom: 12px;
       padding: 10px 12px;
       background: #f3f3f5;
       border-radius: 12px;
@@ -589,6 +587,99 @@
     .selection-summary-box.hidden {
       display: none;
     }
+
+    /* 모달 오른쪽 하단 버튼 영역 */
+    .subject-right-footer {
+      margin-top: 16px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .subject-report-btn {
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: none;
+      background: #eef1ff;
+      color: #2563ff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* 새 폴더 카드 */
+    .new-folder-card {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      border: 2px dashed #c8d2ff;
+    }
+
+    .new-folder-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .add-folder-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      background: #eef1ff;
+      color: #4b6fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .folder-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #46485f;
+    }
+    /* ==== 목적 선택 칩 UI ==== */
+.purpose-section {
+  margin-top: 8px;
+}
+
+.purpose-label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #111;
+}
+
+.purpose-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.purpose-chip {
+  border-radius: 999px;
+  border: 1px solid #e2e2e2;
+  padding: 10px 18px;
+  background: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+}
+
+.purpose-chip:hover {
+  background: #f7f7f7;
+}
+
+.purpose-chip.is-selected {
+  border-color: #2563ff;
+  background: #f3f6ff;
+  box-shadow: 0 0 0 1px rgba(37, 99, 255, 0.15);
+}
+
   </style>
 </head>
 <body>
@@ -616,11 +707,11 @@
             <div class="nav-icon">📂</div>
             <span>프로젝트 관리</span>
           </li>
-          <a href="prompt_list.html" class="nav-link">
-          <li class="nav-item">
-            <div class="nav-icon">🛒</div>
-            <span>프롬프트 마켓</span>
-          </li>
+          <a href="market1.html" class="nav-link">
+            <li class="nav-item">
+              <div class="nav-icon">🛒</div>
+              <span>프롬프트 마켓</span>
+            </li>
           </a>
           <a href="fast_search.html" class="nav-link">
             <li class="nav-item">
@@ -657,23 +748,11 @@
           <div class="project-tabs">
             <button class="tab-btn active">
               All
-              <span class="tab-badge">12</span>
+              <span class="tab-badge">1</span>
             </button>
             <button class="tab-btn">
               사회
-              <span class="tab-badge">12</span>
-            </button>
-            <button class="tab-btn">
-              과학
-              <span class="tab-badge">12</span>
-            </button>
-            <button class="tab-btn">
-              영어
-              <span class="tab-badge">12</span>
-            </button>
-            <button class="tab-btn">
-              국어
-              <span class="tab-badge">12</span>
+              <span class="tab-badge">1</span>
             </button>
           </div>
 
@@ -684,6 +763,15 @@
         </div>
 
         <section class="project-grid">
+          <!-- 새 폴더 카드 -->
+          <article class="project-card new-folder-card" id="openSubjectModalCard">
+            <div class="new-folder-center">
+              <div class="add-folder-icon">＋</div>
+              <div class="folder-title">새로운 폴더 만들기</div>
+            </div>
+          </article>
+
+          <!-- 이하 예시 카드들 -->
           <a href="chat-list.html" class="nav-link">
             <article class="project-card">
               <div class="project-card-header">
@@ -692,7 +780,7 @@
                     <div class="subject-color social"></div>
                     <div>
                       <div class="subject-title">사회</div>
-                      <div class="subject-meta">8개의 대화</div>
+                      <div class="subject-meta">6개의 대화</div>
                     </div>
                   </div>
                 </div>
@@ -723,34 +811,32 @@
     <div class="subject-modal-close" id="closeSubjectModalBtn">×</div>
 
     <div class="subject-modal-left">
-      <div>
-        <div class="subject-stepper">
-          <div class="subject-step active" data-step="subject">
-            <div class="subject-step-dot-wrap">
-              <div class="subject-step-dot"></div>
-              <div class="subject-step-line"></div>
-            </div>
-            <div class="subject-step-label">과목</div>
+      <div class="subject-stepper">
+        <div class="subject-step active" data-step="subject">
+          <div class="subject-step-dot-wrap">
+            <div class="subject-step-dot"></div>
+            <div class="subject-step-line"></div>
           </div>
-          <div class="subject-step" data-step="purpose">
-            <div class="subject-step-dot-wrap">
-              <div class="subject-step-dot"></div>
-              <div class="subject-step-line"></div>
-            </div>
-            <div class="subject-step-label">목적</div>
-          </div>
-          <div class="subject-step" data-step="prompt">
-            
-          </div>
+          <div class="subject-step-label">과목</div>
         </div>
-
-        <!-- 선택 요약 박스 -->
-        <div id="selectionSummary" class="selection-summary-box hidden"></div>
+        <div class="subject-step" data-step="purpose">
+          <div class="subject-step-dot-wrap">
+            <div class="subject-step-dot"></div>
+            <div class="subject-step-line"></div>
+          </div>
+          <div class="subject-step-label">목적</div>
+        </div>
+        <!-- <div class="subject-step" data-step="prompt">
+          <div class="subject-step-dot-wrap">
+            <div class="subject-step-dot"></div>
+            <div class="subject-step-line"></div>
+          </div>
+          <div class="subject-step-label"></div>
+        </div> -->
       </div>
 
-      <button class="subject-left-footer-btn" id="createFolderBtn" disabled>
-        폴더 생성하기
-      </button>
+      <!-- 선택 요약 박스: 왼쪽 하단 -->
+      <div id="selectionSummary" class="selection-summary-box hidden"></div>
     </div>
 
     <div class="subject-modal-right">
@@ -760,11 +846,32 @@
       </div>
 
       <input class="subject-input" placeholder="원하는 과목을 작성해주세요" />
-
+            <!-- ✅ 추천 목적 칩 영역 -->
+            <div class="purpose-section" id="purposeSection" style="display:none;">
+              <div class="purpose-label">추천 목적</div>
+              <div class="purpose-chip-row" id="purposeChipRow">
+                <!-- JS로 채움 -->
+              </div>
+            </div>
+      
+            <div class="subject-grid-wrap">
+              <div class="subject-grid">
+                <!-- JS에서 채움 -->
+              </div>
+            </div>
+      
       <div class="subject-grid-wrap">
         <div class="subject-grid">
           <!-- JS에서 채움 -->
         </div>
+      </div>
+
+      <!-- 오른쪽 하단 버튼: 프로젝트 리포트 / 폴더 생성하기 -->
+      <div class="subject-right-footer">
+        
+        <button class="subject-left-footer-btn" id="createFolderBtn" disabled>
+          폴더 생성하기
+        </button>
       </div>
     </div>
   </div>
@@ -787,137 +894,157 @@
   window.addEventListener("resize", updateScale);
   updateScale();
 
-  // 탭 active 토글
+  // ===== 탭 active 토글 =====
   const tabButtons = document.querySelectorAll(".tab-btn");
-  tabButtons.forEach(btn => {
+  tabButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
-      tabButtons.forEach(b => b.classList.remove("active"));
+      tabButtons.forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
     });
   });
 
   // ===== 모달 열고 닫기 =====
-  const subjectModal = document.getElementById('subjectModal');
-  const openSubjectModalBtn = document.getElementById('openSubjectModalBtn');
-  const closeSubjectModalBtn = document.getElementById('closeSubjectModalBtn');
-  const createFolderBtn = document.getElementById('createFolderBtn');
+  const subjectModal = document.getElementById("subjectModal");
+  const openSubjectModalBtn = document.getElementById("openSubjectModalBtn");
+  const closeSubjectModalBtn = document.getElementById("closeSubjectModalBtn");
+  const createFolderBtn = document.getElementById("createFolderBtn");
+  const openSubjectModalCard = document.getElementById("openSubjectModalCard");
 
   // 선택 상태
-  let currentStep = 'subject';
+  let currentStep = "subject";
   let selectedSubject = null;
   let selectedPurpose = null;
   let selectedPrompt = null;
 
-  openSubjectModalBtn.addEventListener('click', () => {
+  function openSubjectModal() {
     selectedSubject = null;
     selectedPurpose = null;
     selectedPrompt = null;
-    setStep('subject');
+    setStep("subject");
     updateCreateButton();
     updateSummary();
-    subjectModal.classList.add('is-open');
+    subjectModal.classList.add("is-open");
+  }
+
+  if (openSubjectModalBtn) {
+    openSubjectModalBtn.addEventListener("click", openSubjectModal);
+  }
+  if (openSubjectModalCard) {
+    openSubjectModalCard.addEventListener("click", openSubjectModal);
+  }
+
+  closeSubjectModalBtn.addEventListener("click", () => {
+    subjectModal.classList.remove("is-open");
   });
 
-  closeSubjectModalBtn.addEventListener('click', () => {
-    subjectModal.classList.remove('is-open');
-  });
-
-  subjectModal.addEventListener('click', (e) => {
+  subjectModal.addEventListener("click", (e) => {
     if (e.target === subjectModal) {
-      subjectModal.classList.remove('is-open');
+      subjectModal.classList.remove("is-open");
     }
   });
 
   // ===== 단계/카드 로직 =====
-  const stepEls = document.querySelectorAll('.subject-step');
-  const modalTitleEl = document.querySelector('.subject-modal-title');
-  const modalSubtitleEl = document.querySelector('.subject-modal-subtitle');
-  const inputEl = document.querySelector('.subject-input');
-  const subjectGridEl = document.querySelector('.subject-grid');
-  const selectionSummaryEl = document.getElementById('selectionSummary');
+  const stepEls = document.querySelectorAll(".subject-step");
+  const modalTitleEl = document.querySelector(".subject-modal-title");
+  const modalSubtitleEl = document.querySelector(".subject-modal-subtitle");
+  const inputEl = document.querySelector(".subject-input");
+  const subjectGridEl = document.querySelector(".subject-grid");
+  const selectionSummaryEl = document.getElementById("selectionSummary");
+
+  // 목적 칩 영역 (HTML에 추가해놨다는 전제)
+  const purposeSectionEl = document.getElementById("purposeSection");
+  const purposeChipRowEl = document.getElementById("purposeChipRow");
 
   const SUBJECT_OPTIONS = [
-    '국어', '수학', '한국지리',
-    '화법과 작문', '언어와 매체', '영어',
-    '물리 I', '생명과학 I', '한국사'
+    "국어",
+    "수학",
+    "사회",
+    "화법과 작문",
+    "언어와 매체",
+    "영어",
+    "물리 I",
+    "생명과학 I",
+    "한국사",
   ];
 
   const PURPOSE_OPTIONS = [
-    '글쓰기', '오답 노트', '세부특기사항',
-    '토론', '단순 학습', '시험 대비',
-    '아이디어', '개념 정리', '프로젝트·리포트'
+    "글쓰기",
+    "오답노트",
+    "세부 특기사항",
+    "토론",
+    "아이디어",
+    "시험 대비",
+    "개념정리",
+    "프로젝트 및 리포트"
   ];
 
   const PROMPT_OPTIONS = [
-    '핵심 개념 정리', '한 줄 요약', '기출 문제 생성',
-    '오답 분석', '개념 비교', '서술형 연습',
-    '연습 퀴즈 생성', '단원 요약', '중요 개념 설명'
+    "핵심 개념 정리",
+    "한 줄 요약",
+    "기출 문제 생성",
+    "오답 분석",
+    "개념 비교",
+    "서술형 연습",
+    "연습 퀴즈 생성",
+    "단원 요약",
+    "중요 개념 설명",
   ];
 
-  // ✅ 과목 + 목적만 선택되면 버튼 활성화
   function updateCreateButton() {
     const ready = !!(selectedSubject && selectedPurpose);
     if (ready) {
       createFolderBtn.disabled = false;
-      createFolderBtn.classList.add('enabled');
+      createFolderBtn.classList.add("enabled");
     } else {
       createFolderBtn.disabled = true;
-      createFolderBtn.classList.remove('enabled');
+      createFolderBtn.classList.remove("enabled");
     }
   }
 
-  // ✅ 요약도 과목 + 목적만 표시
   function updateSummary() {
     if (selectedSubject && selectedPurpose) {
-      selectionSummaryEl.classList.remove('hidden');
+      selectionSummaryEl.classList.remove("hidden");
       selectionSummaryEl.innerHTML = `
         <strong>선택한 설정</strong>
         과목 - ${selectedSubject}<br>
         목적 - ${selectedPurpose}
       `;
     } else {
-      selectionSummaryEl.classList.add('hidden');
-      selectionSummaryEl.innerHTML = '';
+      selectionSummaryEl.classList.add("hidden");
+      selectionSummaryEl.innerHTML = "";
     }
   }
 
+  // 과목 / 프롬프트 카드 렌더링
   function renderCards(list) {
-    subjectGridEl.innerHTML = '';
-    list.forEach(label => {
-      const btn = document.createElement('button');
-      btn.className = 'subject-card';
+    subjectGridEl.innerHTML = "";
+    list.forEach((label) => {
+      const btn = document.createElement("button");
+      btn.className = "subject-card";
 
-      if (currentStep === 'subject' && label === selectedSubject) {
-        btn.classList.add('is-selected');
+      if (currentStep === "subject" && label === selectedSubject) {
+        btn.classList.add("is-selected");
       }
-      if (currentStep === 'purpose' && label === selectedPurpose) {
-        btn.classList.add('is-selected');
-      }
-      if (currentStep === 'prompt' && label === selectedPrompt) {
-        btn.classList.add('is-selected');
+      if (currentStep === "prompt" && label === selectedPrompt) {
+        btn.classList.add("is-selected");
       }
 
-      const bar = document.createElement('span');
-      bar.className = 'subject-card-bar';
+      const bar = document.createElement("span");
+      bar.className = "subject-card-bar";
 
-      const text = document.createElement('span');
+      const text = document.createElement("span");
       text.textContent = label;
 
       btn.appendChild(bar);
       btn.appendChild(text);
 
-      btn.addEventListener('click', () => {
-        if (currentStep === 'subject') {
-          // 과목 선택 → 목적 단계로 이동
+      btn.addEventListener("click", () => {
+        if (currentStep === "subject") {
           selectedSubject = label;
           selectedPurpose = null;
           selectedPrompt = null;
-          setStep('purpose');
-        } else if (currentStep === 'purpose') {
-          // 목적 선택 → 여기서 멈춤 (프롬프트 단계로 자동 이동 X)
-          selectedPurpose = label;
-        } else if (currentStep === 'prompt') {
-          // 프롬프트는 별도 플로우용 (버튼 활성화와는 무관)
+          setStep("purpose");
+        } else if (currentStep === "prompt") {
           selectedPrompt = label;
           renderCards(PROMPT_OPTIONS);
         }
@@ -929,34 +1056,74 @@
     });
   }
 
+  // 목적 선택 칩 렌더링
+  function renderPurposeChips() {
+    if (!purposeChipRowEl) return;
+    purposeChipRowEl.innerHTML = "";
+    PURPOSE_OPTIONS.forEach((label) => {
+      const chip = document.createElement("button");
+      chip.className = "purpose-chip";
+      chip.textContent = label;
+
+      if (label === selectedPurpose) {
+        chip.classList.add("is-selected");
+      }
+
+      chip.addEventListener("click", () => {
+        selectedPurpose = label;
+        renderPurposeChips();
+        updateCreateButton();
+        updateSummary();
+      });
+
+      purposeChipRowEl.appendChild(chip);
+    });
+  }
+
   function setStep(step) {
     currentStep = step;
 
-    stepEls.forEach(el => el.classList.remove('active'));
+    // 스텝 active 표시
+    stepEls.forEach((el) => el.classList.remove("active"));
     const active = document.querySelector(`.subject-step[data-step="${step}"]`);
-    if (active) active.classList.add('active');
+    if (active) active.classList.add("active");
 
-    if (step === 'subject') {
-      modalTitleEl.textContent = '공부하려는 과목이 무엇인가요?';
-      modalSubtitleEl.textContent = '원하는 과목을 작성 혹은 선택해주세요';
-      inputEl.placeholder = '원하는 과목을 작성해주세요';
+    // subjectGrid의 래퍼 (display 토글용)
+    const subjectGridWrap = subjectGridEl ? subjectGridEl.parentElement : null;
+
+    if (step === "subject") {
+      modalTitleEl.textContent = "공부하려는 과목이 무엇인가요?";
+      modalSubtitleEl.textContent = "원하는 과목을 작성 혹은 선택해주세요";
+      inputEl.placeholder = "원하는 과목을 작성해주세요";
+
+      if (subjectGridWrap) subjectGridWrap.style.display = "block";
+      if (purposeSectionEl) purposeSectionEl.style.display = "none";
+
       renderCards(SUBJECT_OPTIONS);
-    } else if (step === 'purpose') {
-      modalTitleEl.textContent = '활용 목적이 무엇인가요?';
-      modalSubtitleEl.textContent = '원하는 사용 목적을 선택해주세요';
-      inputEl.placeholder = '원하는 사용 목적을 작성해주세요';
-      renderCards(PURPOSE_OPTIONS);
-    } else if (step === 'prompt') {
-      modalTitleEl.textContent = '프롬프트를 어떻게 사용하고 싶나요?';
-      modalSubtitleEl.textContent = '원하는 프롬프트 유형을 선택해주세요';
-      inputEl.placeholder = '예: 에세이 초안 작성, 시험 대비 문제 생성 등';
+    } else if (step === "purpose") {
+      modalTitleEl.textContent = "활용 목적이 무엇인가요?";
+      modalSubtitleEl.textContent = "원하는 사용 목적을 선택해주세요";
+      inputEl.placeholder = "원하는 사용 목적을 작성해주세요";
+
+      if (subjectGridWrap) subjectGridWrap.style.display = "none";
+      if (purposeSectionEl) purposeSectionEl.style.display = "block";
+
+      renderPurposeChips();
+    } else if (step === "prompt") {
+      modalTitleEl.textContent = "프롬프트를 어떻게 사용하고 싶나요?";
+      modalSubtitleEl.textContent = "원하는 프롬프트 유형을 선택해주세요";
+      inputEl.placeholder = "예: 에세이 초안 작성, 시험 대비 문제 생성 등";
+
+      if (subjectGridWrap) subjectGridWrap.style.display = "block";
+      if (purposeSectionEl) purposeSectionEl.style.display = "none";
+
       renderCards(PROMPT_OPTIONS);
     }
   }
 
-  // 왼쪽 스텝 클릭으로도 이동 가능 (prompt는 별도 플로우지만 유지)
-  stepEls.forEach(el => {
-    el.addEventListener('click', () => {
+  // 스텝 클릭으로 이동
+  stepEls.forEach((el) => {
+    el.addEventListener("click", () => {
       const step = el.dataset.step;
       setStep(step);
       updateCreateButton();
@@ -964,22 +1131,23 @@
     });
   });
 
-  // 처음 모달 열기 전에도 한 번 기본 렌더
+  // 최초 렌더
   renderCards(SUBJECT_OPTIONS);
 
-  // 폴더 생성 버튼 → search.html 이동
-  createFolderBtn.addEventListener('click', () => {
+  // 폴더 생성 버튼
+  createFolderBtn.addEventListener("click", () => {
     if (createFolderBtn.disabled) return;
 
     const params = new URLSearchParams({
-      subject: selectedSubject || '',
-      purpose: selectedPurpose || '',
-      prompt: selectedPrompt || '' // 프롬프트는 선택 안 해도 빈 값으로 전달
+      subject: selectedSubject || "",
+      purpose: selectedPurpose || "",
+      prompt: selectedPrompt || "",
     });
 
     window.location.href = `non_folder.html?${params.toString()}`;
   });
 </script>
+
 
 </body>
 </html>
